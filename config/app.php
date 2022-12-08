@@ -1,9 +1,11 @@
 <?php
 
 return [
-   'name' => 'MVC',
+	'name' => 'MVC',
 
-   'providers' => [
-	   'App\Providers\AppServiceProvider'
-   ]
+	'debug' => true,
+	
+	'providers' => [
+		'App\Providers\AppServiceProvider'
+	]
 ];

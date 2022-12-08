@@ -1,7 +1,10 @@
 vendor
 node_modules
+
 .DS_Store
-dist
-*.local
 .idea
-public/build
+
+.env
+*.local
+
+public/build/

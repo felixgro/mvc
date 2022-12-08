@@ -1,5 +1,5 @@
 <template>
-  <img alt="Vue logo" src="../assets/logo.png" height="40" />
+  <img alt="Vue logo" src="../assets/images/logo.png" height="40" />
 
   <h1>Vue {{ msg }}</h1>
 
