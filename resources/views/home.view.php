@@ -1,5 +1,3 @@
-<?php // require_once 'partials/head.php' ?>
-
 <?= '<p class="message">PHP output here, potentially large HTML chunks</p>' ?>
 
 <div class="vue-app">
@@ -13,5 +11,3 @@
 </div>
 
 <?= '<p class="message">PHP output here, potentially large HTML chunks</p>' ?>
-
-<?php //require_once 'partials/foot.php' ?>
