@@ -4,12 +4,7 @@ use App\Lib\Core\Application;
 
 function app(string $abstract = ''): mixed
 {
-	global $app;
-
-	if (!isset($app)) {
-		$app = new Application();
-		$app->boot();
-	}
+	$app = Application::getInstance();
 
 	if (!empty($abstract)) {
 		return $app->get($abstract);
