@@ -1,6 +1,7 @@
 <?php
 
 use App\Lib\Core\Application;
+use App\Lib\Http\Response;
 
 function app(string $abstract = ''): mixed
 {
