@@ -4,19 +4,50 @@ namespace App\Controller;
 
 use App\Lib\Http\Controller;
 use App\Lib\Http\Response;
-use App\Lib\Support\View;
+use App\Lib\Http\Request;
+
+use function view;
+use function json;
+
 
 class HomeController extends Controller
 {
-	public static function index(): Response
+	public function index(Request $request): Response
 	{
-		return new Response(
-			View::make('home')
-		);
+		/*
+		return view('app:home')->with([
+			'user' => $user
+		]);
+		*/
+		return view('app:home');
 	}
 
-	public static function about(): Response
+	public function about(): Response
 	{
-		return new Response('Hello About!');
+		return json('Hello About!');
+	}
+
+	public function auth(): Response
+	{
+		$user = 'admin';
+		$password = 'secret';
+
+		header('Cache-Control: no-cache, must-revalidate, max-age=0');
+
+		$has_supplied_credentials = !(empty($_SERVER['PHP_AUTH_USER']) && empty($_SERVER['PHP_AUTH_PW']));
+
+		$is_not_authenticated = (
+			!$has_supplied_credentials ||
+			$_SERVER['PHP_AUTH_USER'] != $user ||
+			$_SERVER['PHP_AUTH_PW'] != $password
+		);
+
+		if ($is_not_authenticated) {
+			header('HTTP/1.1 401 Authorization Required');
+			header('WWW-Authenticate: Basic realm="Access denied"');
+			exit;
+		}
+
+		return new Response("Hello $user!");
 	}
 }

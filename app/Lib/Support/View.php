@@ -22,8 +22,9 @@ class View
 		]);
 	}
 
-	public static function make(string $view, string $layout = 'app'): string
+	public static function make(string $name): string
 	{
+		[$layout, $view] = explode(':', $name);
 		return (new View($layout))->render($view);
 	}
 

@@ -2,7 +2,13 @@
 
 use App\Lib\Core\Application;
 use App\Lib\Http\Response;
+use App\Lib\Support\View;
 
+/**
+ * Main entry point when interacting with the application.
+ * Returns the application singleton instance. If a class abstract
+ * is given, the application tries to resolve the class internally.
+ */
 function app(string $abstract = ''): mixed
 {
 	$app = Application::getInstance();
@@ -14,40 +20,74 @@ function app(string $abstract = ''): mixed
 	return $app;
 }
 
-/*
-function dd($value)
+/**
+ * Resolves data from config files.
+ */
+function config(string $name): mixed
 {
-   if (!isset($value)) $value = 'NULL';
-   if (is_bool($value)) $value = $value ? 'true' : 'false';
-   echo "<pre>";
-   print_r($value);
-   echo "</pre>";
-   die();
+	return app()->get("config.$name");
 }
-*/
 
+/**
+ * Returns a response, which contains the rendered view as a string
+ * with the specified status code. The name of the view has to
+ * consists of 2 parts seperated by a colon (f.e: "app:home")
+ */
+function view(string $name, int $status = 200): Response
+{
+	return new Response(
+		View::make($name),
+		$status
+	);
+}
+
+/**
+ * Returns a json encoded response with the
+ * specified data and status.
+ */
+function json(mixed $data, int $status = 200): Response
+{
+	return new Response(
+		json_encode($data),
+		$status
+	);
+}
+
+/**
+ * Stops any execution with specified status message and code.
+ */
 function abort(int $status, $message = null)
 {
 	http_response_code($status);
+
 	if (isset($message)) {
 		echo json_encode(['message' => $message]);
-	}
-
-	if ($status === 404) {
-		renderView('404', 404);
 	}
 
 	die();
 }
 
-function renderView(string $name, int $status = 200)
+/**
+ * Converts a relative file path to an absolute one on the system.
+ * By default, this function generates all directories, which are missing.
+ */
+function path(string $path, bool $generateDirs = true): string
 {
-	http_response_code($status);
-	require_once sprintf("resources/views/%s.view.php", $name);
+	if (str_starts_with($path, '/')) $path = ltrim($path, '/');
+	$path = str_replace('/', DIRECTORY_SEPARATOR, $path);
+	$dirName = pathinfo($path, PATHINFO_DIRNAME);
+
+	if ($generateDirs && !file_exists($dirName)) {
+		mkdir($dirName, 0777, true);
+	}
+
+	return $path;
 }
 
 /**
  * Makes sure the path starts and ends with a slash.
+ * This is used to synchronize route definitions with
+ * the correlating route action keys in storage.
  */
 function sanitizeUriPath(string $path): string
 {
@@ -58,32 +98,7 @@ function sanitizeUriPath(string $path): string
 	return rtrim($path, '/');
 }
 
-function path(string $path): string
-{
-	if (str_starts_with($path, '/')) $path = ltrim($path, '/');
-	$path = str_replace('/', DIRECTORY_SEPARATOR, $path);
-	$dirName = pathinfo($path, PATHINFO_DIRNAME);
-
-	if (!file_exists($dirName)) {
-		mkdir($dirName, 0777, true);
-	}
-
-	return $path;
-}
-
-function config(string $name): mixed
-{
-	return app()->get("config.$name");
-}
-
-function isPriority(string $dbName): bool
-{
-	$priorities = explode("\n", file_get_contents(path('storage/priority.txt')));
-	$priorities = array_map(fn($db) => trim($db), $priorities);
-	return in_array($dbName, $priorities);
-}
-
-
+// VITE DEMO
 // Helpers here serve as example. Change to suit your needs.
 const VITE_HOST = 'http://localhost:5134';
 

@@ -7,13 +7,29 @@ use App\Lib\Http\Request;
 
 class Application
 {
+	/**
+	 * Stores the one and only application instance.
+	 */
 	private static Application $instance;
 
+	/**
+	 * The dependency injections container for handling
+	 * all application class instances and singletons as well
+	 * as auto-wiring method dependencies.
+	 */
 	private Container $container;
 
+	/**
+	 * Stores all application service providers, which
+	 * interact with the container during the registration and
+	 * booting of the entire application.
+	 */
 	private array $providers = [];
 
-
+	/**
+	 * Privately constructs the application to prevent
+	 * the generation of multiple instances.
+	 */
 	private function __construct()
 	{
 		$this->container = new Container();
@@ -21,6 +37,10 @@ class Application
 		$this->registerProviders();
 	}
 
+	/**
+	 * Retrieve the one and only singleton
+	 * instance of the application class.
+	 */
 	public static function getInstance(): Application
 	{
 		if (!isset(self::$instance)) {
@@ -31,7 +51,13 @@ class Application
 		return self::$instance;
 	}
 
-	public function handleRequest()
+	/**
+	 * Main entry point for the incoming http request.
+	 * This should be the only function call in the root
+	 * index.php file, and it's only dependency is the correct
+	 * vendor autoload file.
+	 */
+	public function handleRequest(): void
 	{
 		$kernel = $this->container->resolve(Kernel::class);
 		$request = $this->container->resolve(Request::class);
@@ -46,11 +72,18 @@ class Application
 		}
 	}
 
+	/**
+	 * Tries to bind a factory to an abstract using the
+	 * application container.
+	 */
 	public function bind(string $abstract, callable $factory)
 	{
 		$this->container->bind($abstract, $factory);
 	}
 
+	/**
+	 * Tries to resolve a class from the application container.
+	 */
 	public function get(string $abstract): mixed
 	{
 		return $this->container->resolve($abstract);
