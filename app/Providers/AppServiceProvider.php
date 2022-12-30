@@ -8,14 +8,18 @@ use App\Core\Http\Middleware\AuthMiddleware;
 use App\Core\Http\Middleware\ViteMiddleware;
 use App\Core\Http\Router;
 use App\Core\Support\Config;
+use App\Core\Support\Vite;
 
 class AppServiceProvider implements ServiceProvider
 {
 	public static function register(Container $c)
 	{
 		$c->bind(Config::class, function () {
-			$configDir = path('../config/');
-			return new Config($configDir);
+			return new Config(path('../config/'));
+		});
+
+		$c->bind(Vite::class, function () {
+			return new Vite('http://' . config('vite.host') . ':' . config('vite.port'), path('public/build/manifest.json'));
 		});
 	}
 

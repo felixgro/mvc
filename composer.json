@@ -1,29 +1,30 @@
 {
-    "name": "felixgro/mvc",
-    "type": "library",
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "felixgro",
-            "email": "f.grohs@komplizinnen.at"
-        }
-    ],
-    "require": {
-        "ext-pdo": "*",
-        "symfony/http-foundation": "^6.2",
-        "symfony/event-dispatcher": "^6.2",
-        "symfony/http-kernel": "^6.2",
-        "vlucas/phpdotenv": "^5.5"
-    },
-    "autoload": {
-        "psr-4": {
-            "App\\": "app"
-        },
-        "files": [
-            "app/Core/_globals.php"
-        ]
-    },
-    "require-dev": {
-        "symfony/var-dumper": "^6.2"
+  "name": "felixgro/mvc",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "felixgro",
+      "email": "f.grohs@komplizinnen.at"
     }
+  ],
+  "require": {
+    "ext-pdo": "*",
+    "ext-curl": "*",
+    "symfony/http-foundation": "^6.2",
+    "symfony/event-dispatcher": "^6.2",
+    "symfony/http-kernel": "^6.2",
+    "vlucas/phpdotenv": "^5.5"
+  },
+  "autoload": {
+    "psr-4": {
+      "App\\": "app"
+    },
+    "files": [
+      "app/Core/_globals.php"
+    ]
+  },
+  "require-dev": {
+    "symfony/var-dumper": "^6.2"
+  }
 }
