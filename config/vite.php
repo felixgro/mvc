@@ -9,7 +9,14 @@ return [
 
 	/**
 	 * Port on which the vite dev server listens for requests.
-	 * This needs to be the same port as defined in vite.config.js
+	 * This has to be the same port as defined in vite.config.js
 	 */
-	'port' => '5134'
+	'port' => '5134',
+
+	/**
+	 * Path to build manifest file.
+	 * This path has to correlate to the output path defined
+	 * in vite.config.js
+	 */
+	'manifest' => 'public/build/manifest.json'
 ];

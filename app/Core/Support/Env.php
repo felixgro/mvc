@@ -4,7 +4,7 @@ namespace App\Core\Support;
 
 use Dotenv\Dotenv;
 
-class Env
+class Env extends Singleton
 {
 	/**
 	 * Reference to dotenv instance.
@@ -15,7 +15,7 @@ class Env
 	 * Initialize dotenv library, which loads all environment variables
 	 * defined in .env file in the $_ENV super global variable.
 	 */
-	public function __construct()
+	protected function __constructed()
 	{
 		$this->dotenv = Dotenv::createImmutable(path('./'));
 		$this->dotenv->load();

@@ -121,9 +121,13 @@ class Router
 	/**
 	 * Registers global middlewares.
 	 */
-	public function setGlobalMiddleware(array $middleware): void
+	public function addGlobalMiddleware(array|string $middleware): void
 	{
-		$this->globalMiddleware = $middleware;
+		if (is_string($middleware)) {
+			$this->globalMiddleware[] = $middleware;
+		} else {
+			$this->globalMiddleware = array_merge($this->globalMiddleware, $middleware);
+		}
 	}
 
 	/**

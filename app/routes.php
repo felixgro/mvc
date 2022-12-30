@@ -17,4 +17,6 @@ $router->get('/test', function (\App\Core\Support\Env $env) {
 	// $val = env('APP_NAME', 'Default Name');
 	// dd($env->get('APP_NAMEe', 'Default Name'));
 	// return json($env);
+	$val = config('app.name');
+	return json($val);
 });

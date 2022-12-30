@@ -32,6 +32,11 @@ class Application extends Singleton
 		$this->registerProviders();
 	}
 
+	/**
+	 * Gets called after the first singleton instance
+	 * has been constructed. This enables the use of
+	 * application methods using app() within boot methods.
+	 */
 	protected function __constructed()
 	{
 		$this->bootProviders();
@@ -80,7 +85,7 @@ class Application extends Singleton
 	 */
 	private function loadProviders(): void
 	{
-		$this->providers = array_reverse((require('../config/app.php'))['providers']);
+		$this->providers = (require('../config/app.php'))['providers'];
 	}
 
 	/**

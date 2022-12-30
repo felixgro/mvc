@@ -7,30 +7,27 @@ use App\Core\Contracts\ServiceProvider;
 use App\Core\Http\Middleware\AuthMiddleware;
 use App\Core\Http\Middleware\ViteMiddleware;
 use App\Core\Http\Router;
-use App\Core\Support\Config;
-use App\Core\Support\Vite;
+
+use function config;
 
 class AppServiceProvider implements ServiceProvider
 {
 	public static function register(Container $c)
 	{
-		$c->bind(Config::class, function () {
-			return new Config(path('../config/'));
-		});
+		//
 	}
 
 	public static function boot(Container $c)
 	{
-		$c->bind(Vite::class, function () {
-			return new Vite('http://' . config('vite.host') . ':' . config('vite.port'), path('public/build/manifest.json'));
-		});
+		$router = app(Router::class);
 
 		// setup global application middleware
-		$router = $c->resolve(Router::class);
-
-		$router->setGlobalMiddleware([
+		$router->addGlobalMiddleware([
 			AuthMiddleware::class,
-			ViteMiddleware::class
 		]);
+
+		if (config('app.env') === 'development') {
+			$router->addGlobalMiddleware(ViteMiddleware::class);
+		}
 	}
 }

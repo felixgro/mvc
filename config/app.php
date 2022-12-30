@@ -14,7 +14,6 @@ return [
 
 	/**
 	 * Specify, if the application should show errors in the frontend.
-	 * Be careful: This can be a security risk on production systems.
 	 */
 	'debug' => env('APP_DEBUG', false),
 
@@ -25,13 +24,15 @@ return [
 	 * The order directly correlates to the order of execution.
 	 */
 	'providers' => [
-		// Core Service Providers (Don't touch those if you don't know what you're doing)
+		# Core Service Providers (Don't touch those if you don't know what you're doing)
+		'App\Core\Providers\EnvServiceProvider',
 		'App\Core\Providers\KernelServiceProvider',
 		'App\Core\Providers\RequestServiceProvider',
 		'App\Core\Providers\RouterServiceProvider',
 		'App\Core\Providers\MiddlewareServiceProvider',
+		'App\Core\Providers\ViteServiceProvider',
 
-		// Custom application Service Providers (add as many as you like)
+		# Custom application Service Providers (add as many as you like)
 		'App\Providers\AppServiceProvider'
 	]
 ];
