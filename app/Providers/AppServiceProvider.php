@@ -2,8 +2,8 @@
 
 namespace App\Providers;
 
-use App\Lib\Core\Container;
-use App\Lib\Contracts\ServiceProvider;
+use App\Core\Container;
+use App\Core\Contracts\ServiceProvider;
 
 class AppServiceProvider implements ServiceProvider
 {

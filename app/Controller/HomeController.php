@@ -2,12 +2,11 @@
 
 namespace App\Controller;
 
-use App\Lib\Http\Controller;
-use App\Lib\Http\Response;
-use App\Lib\Http\Request;
-
-use function view;
+use App\Core\Http\Controller;
+use App\Core\Http\Request;
+use App\Core\Http\Response;
 use function json;
+use function view;
 
 
 class HomeController extends Controller

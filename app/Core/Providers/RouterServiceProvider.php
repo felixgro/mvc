@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Lib\Providers;
+namespace App\Core\Providers;
 
-use App\Lib\Contracts\ServiceProvider;
-use App\Lib\Core\Container;
-use App\Lib\Http\Router;
+use App\Core\Contracts\ServiceProvider;
+use App\Core\Container;
+use App\Core\Http\Router;
 
 class RouterServiceProvider implements ServiceProvider
 {

@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Lib\Providers;
+namespace App\Core\Providers;
 
-use App\Lib\Contracts\ServiceProvider;
-use App\Lib\Core\Container;
-use App\Lib\Core\EventDispatcher;
-use App\Lib\Http\ControllerResolver;
+use App\Core\Container;
+use App\Core\Contracts\ServiceProvider;
+use App\Core\Lib\ControllerResolver;
+use App\Core\Lib\EventDispatcher;
 use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 

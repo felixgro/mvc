@@ -1,9 +1,9 @@
 <?php
 
-/** @var App\Lib\Http\Router $router */
+/** @var App\Core\Http\Router $router */
 
 use App\Controller\HomeController;
-use App\Lib\Http\Middleware\{
+use App\Core\Http\Middleware\{
 	ViteMiddleware,
 	AuthMiddleware
 };

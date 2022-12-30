@@ -1,8 +1,8 @@
 <?php
 
-use App\Lib\Core\Application;
-use App\Lib\Http\Response;
-use App\Lib\Support\View;
+use App\Core\Application;
+use App\Core\Http\Response;
+use App\Core\Support\View;
 
 /**
  * Main entry point when interacting with the application.

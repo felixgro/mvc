@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Lib\Contracts;
+namespace App\Core\Contracts;
 
-use App\Lib\Http\Request;
+use App\Core\Http\Request;
 
 interface Middleware
 {

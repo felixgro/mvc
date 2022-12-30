@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Lib\Core;
+namespace App\Core;
 
 use ReflectionClass;
 use Exception;

@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Lib\Providers;
+namespace App\Core\Providers;
 
-use App\Lib\Contracts\ServiceProvider;
-use App\Lib\Core\Container;
-use App\Lib\Core\EventDispatcher;
+use App\Core\Container;
+use App\Core\Contracts\ServiceProvider;
+use App\Core\Lib\EventDispatcher;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 
 class MiddlewareServiceProvider implements ServiceProvider

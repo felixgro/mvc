@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Lib\Http\Middleware;
+namespace App\Core\Http\Middleware;
 
-use App\Lib\Contracts\Middleware;
-use App\Lib\Http\Request;
+use App\Core\Contracts\Middleware;
+use App\Core\Http\Request;
 
 class ViteMiddleware implements Middleware
 {

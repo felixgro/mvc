@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Lib\Core;
+namespace App\Core;
 
-use App\Lib\Http\Kernel;
-use App\Lib\Http\Request;
+use App\Core\Http\Request;
+use App\Core\Lib\Kernel;
 
 class Application
 {
@@ -76,7 +76,7 @@ class Application
 	 * Tries to bind a factory to an abstract using the
 	 * application container.
 	 */
-	public function bind(string $abstract, callable $factory)
+	public function bind(string $abstract, callable $factory): void
 	{
 		$this->container->bind($abstract, $factory);
 	}
@@ -95,7 +95,7 @@ class Application
 	private function loadProviders(): void
 	{
 		// first, all core providers since they're essential for a working application
-		foreach (glob(path('app/Lib/Providers/*ServiceProvider.php')) as $providerPath) {
+		foreach (glob(path('app/Core/Providers/*ServiceProvider.php')) as $providerPath) {
 			$this->providers[] = str_replace('/', '\\', ucfirst(substr($providerPath, 0, -4)));
 		}
 

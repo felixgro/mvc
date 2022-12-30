@@ -19,7 +19,7 @@
             "App\\": "app"
         },
         "files": [
-            "app/Lib/_globals.php"
+            "app/Core/_globals.php"
         ]
     },
     "require-dev": {

@@ -1,7 +1,9 @@
 <?php
 
-namespace App\Lib\Http;
+namespace App\Core\Lib;
 
+use App\Core\Http\Request;
+use App\Core\Http\Router;
 use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
 
 class ControllerResolver implements ControllerResolverInterface

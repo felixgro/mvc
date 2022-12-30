@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Lib\Http;
+namespace App\Core\Http;
 
-use App\Lib\Core\Container;
+use App\Core\Container;
 
 class Router
 {

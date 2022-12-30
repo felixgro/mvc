@@ -1,8 +1,6 @@
 <?php
 
-namespace App\Lib\Support;
-
-use App\Lib\Http\Response;
+namespace App\Core\Support;
 
 class View
 {

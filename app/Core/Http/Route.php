@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Lib\Http;
+namespace App\Core\Http;
 
 class Route
 {
@@ -9,7 +9,7 @@ class Route
 
 	public function __construct()
 	{
-		
+
 	}
 
 	public function middleware(string $key): self
