@@ -7,7 +7,7 @@ use App\Core\Http\Request;
 
 class ViteMiddleware implements Middleware
 {
-	public static function handle(Request $request): void
+	public function __invoke(Request $request)
 	{
 		if (!viteServerRunning()) return;
 

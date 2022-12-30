@@ -11,10 +11,13 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class KernelServiceProvider implements ServiceProvider
 {
+	/**
+	 * As long as the container doesn't support interface mappings,
+	 * all required kernel interfaces have to get bound manually.
+	 * TODO: Implement container interface mappings
+	 */
 	public static function register(Container $c)
 	{
-		// As long as the container doesn't support interface mappings,
-		// all interfaces have to get binded manually.
 		$c->bind(EventDispatcherInterface::class, function () use ($c) {
 			return $c->resolve(EventDispatcher::class);
 		});

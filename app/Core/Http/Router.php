@@ -37,6 +37,11 @@ class Router
 	 */
 	private array $globalMiddleware = [];
 
+	/**
+	 * Reference to current application container instance.
+	 * This is needed to resolve controller methods using the
+	 * containers dependency-injection and auto-wiring features.
+	 */
 	private Container $container;
 
 	/*
@@ -63,6 +68,7 @@ class Router
 		if (array_key_exists($path, $mappings)) {
 			return function () use ($mappings, $path) {
 				$method = $mappings[$path];
+				$this->executeGlobalMiddleware();
 				return $this->container->executeMethod($method[0], $method[1]);
 			};
 		}
@@ -129,9 +135,11 @@ class Router
 	 */
 	public function executeMiddleware(string $middleware): void
 	{
-		# create middleware instance
-		$mw = new ($middleware)();
-
+		$res = $this->container->executeMethod($middleware, '__invoke');
+		
+		if (isset($res) && $res instanceof Response) {
+			exit($res->send());
+		}
 	}
 
 	/**

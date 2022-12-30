@@ -8,18 +8,6 @@ use App\Core\Http\Middleware\{
 	AuthMiddleware
 };
 
-// TODO: Move in service provider
-$router->setGlobalMiddleware([
-	AuthMiddleware::class,
-	ViteMiddleware::class
-]);
-
-/*
-$router->setDevMiddleware([
-	ViteMiddleware::class
-]);
-*/
-
 $router->get('/', [HomeController::class, 'index']);
 
 $router->get('/about', [HomeController::class, 'about']);
