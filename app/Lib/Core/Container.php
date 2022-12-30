@@ -2,9 +2,8 @@
 
 namespace App\Lib\Core;
 
-use Exception;
 use ReflectionClass;
-use ReflectionMethod;
+use Exception;
 
 class Container
 {
