@@ -15,6 +15,6 @@ $router->get('/auth', [HomeController::class, 'auth']);
 
 $router->get('/test', function (\App\Core\Support\Env $env) {
 	// $val = env('APP_NAME', 'Default Name');
-	dd($env->get('APP_NAMEe', 'Default Name'));
-	return json($env);
+	// dd($env->get('APP_NAMEe', 'Default Name'));
+	// return json($env);
 });

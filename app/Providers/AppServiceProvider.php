@@ -17,14 +17,14 @@ class AppServiceProvider implements ServiceProvider
 		$c->bind(Config::class, function () {
 			return new Config(path('../config/'));
 		});
-
-		$c->bind(Vite::class, function () {
-			return new Vite('http://' . config('vite.host') . ':' . config('vite.port'), path('public/build/manifest.json'));
-		});
 	}
 
 	public static function boot(Container $c)
 	{
+		$c->bind(Vite::class, function () {
+			return new Vite('http://' . config('vite.host') . ':' . config('vite.port'), path('public/build/manifest.json'));
+		});
+
 		// setup global application middleware
 		$router = $c->resolve(Router::class);
 

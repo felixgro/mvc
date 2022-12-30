@@ -40,7 +40,7 @@ function config(string $name, mixed $default = null): mixed
  */
 function env(string $key, mixed $default = null): mixed
 {
-	return app(Env::class)->get($key, $default);
+	return array_key_exists($key, $_ENV) ? $_ENV[$key] : $default;
 }
 
 /**
@@ -83,25 +83,6 @@ function abort(int $status, $message = null)
 }
 
 /**
- * Converts a relative file path to an absolute one on the system.
- * By default, this function generates all directories, which are missing.
- */
-function path(string $path, bool $generateDirs = true): string
-{
-	if (!str_starts_with($path, "../")) $path = "../" . $path;
-
-	if (str_starts_with($path, '/')) $path = ltrim($path, '/');
-	$path = str_replace('/', DIRECTORY_SEPARATOR, $path);
-	$dirName = pathinfo($path, PATHINFO_DIRNAME);
-
-	if ($generateDirs && !file_exists($dirName)) {
-		mkdir($dirName, 0777, true);
-	}
-
-	return $path;
-}
-
-/**
  * Makes sure the path starts and ends with a slash.
  * This is used to synchronize route definitions with
  * the correlating route action keys in storage.
@@ -123,4 +104,23 @@ function sanitizeUriPath(string $path): string
 function vite(string $entry): string
 {
 	return app(Vite::class)->asset($entry);
+}
+
+/**
+ * Converts a relative file path to an absolute one on the system.
+ * By default, this function generates all directories, which are missing.
+ */
+function path(string $path, bool $generateDirs = true): string
+{
+	if (!str_starts_with($path, "../")) $path = "../" . $path;
+
+	if (str_starts_with($path, '/')) $path = ltrim($path, '/');
+	$path = str_replace('/', DIRECTORY_SEPARATOR, $path);
+	$dirName = pathinfo($path, PATHINFO_DIRNAME);
+
+	if ($generateDirs && !file_exists($dirName)) {
+		mkdir($dirName, 0777, true);
+	}
+
+	return $path;
 }

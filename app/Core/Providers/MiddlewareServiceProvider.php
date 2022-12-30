@@ -7,12 +7,7 @@ use App\Core\Contracts\ServiceProvider;
 
 class MiddlewareServiceProvider implements ServiceProvider
 {
-	public static array $globalMiddleware = [];
 
-	/**
-	 * Load all lib middlewares
-	 * TODO: Add support for custom defined middlewares
-	 */
 	public static function register(Container $c)
 	{
 		//
@@ -20,6 +15,7 @@ class MiddlewareServiceProvider implements ServiceProvider
 
 	/**
 	 * Register request listener which runs all defined middlewares.
+	 * TODO: Load all route middlewares using the router and event dispatcher
 	 */
 	public static function boot(Container $c)
 	{

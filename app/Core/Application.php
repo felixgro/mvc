@@ -3,14 +3,10 @@
 namespace App\Core;
 
 use App\Core\Http\Request;
+use App\Core\Support\Singleton;
 
-class Application
+class Application extends Singleton
 {
-	/**
-	 * Stores the one and only application instance.
-	 */
-	private static Application $instance;
-
 	/**
 	 * The dependency injections container for handling
 	 * all application class instances and singletons as well
@@ -29,25 +25,16 @@ class Application
 	 * Privately constructs the application to prevent
 	 * the generation of multiple instances.
 	 */
-	private function __construct()
+	protected function __construct()
 	{
 		$this->container = new Container();
 		$this->loadProviders();
 		$this->registerProviders();
 	}
 
-	/**
-	 * Retrieve the one and only singleton
-	 * instance of the application class.
-	 */
-	public static function getInstance(): Application
+	protected function __constructed()
 	{
-		if (!isset(self::$instance)) {
-			self::$instance = new Application();
-			self::$instance->bootProviders();
-		}
-
-		return self::$instance;
+		$this->bootProviders();
 	}
 
 	/**
@@ -93,17 +80,7 @@ class Application
 	 */
 	private function loadProviders(): void
 	{
-		// first, all core providers since they're essential for a working application
-		foreach (glob(path('../app/Core/Providers/*ServiceProvider.php')) as $providerPath) {
-			$class = str_replace('/', '\\', substr($providerPath, 0, -4));
-			$this->providers[] = ucfirst(str_replace('..\\', '', $class));
-		}
-
-		// afterwards, all custom defined providers
-		$this->providers = array_merge(
-			$this->providers,
-			(require_once path('../config/app.php'))['providers']
-		);
+		$this->providers = array_reverse((require('../config/app.php'))['providers']);
 	}
 
 	/**
