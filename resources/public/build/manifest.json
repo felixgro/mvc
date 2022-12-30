@@ -1,0 +1,27 @@
+{
+  "assets/images/logo.png": {
+    "file": "assets/logo.47d845cc.png",
+    "src": "assets/images/logo.png"
+  },
+  "main.js": {
+    "file": "assets/main.429163c5.js",
+    "src": "main.js",
+    "isEntry": true,
+    "imports": [
+      "_vendor.c67ef0eb.js"
+    ],
+    "css": [
+      "assets/main.ce092cf6.css"
+    ],
+    "assets": [
+      "assets/logo.47d845cc.png"
+    ]
+  },
+  "_vendor.c67ef0eb.js": {
+    "file": "assets/vendor.c67ef0eb.js"
+  },
+  "main.css": {
+    "file": "assets/main.ce092cf6.css",
+    "src": "main.css"
+  }
+}

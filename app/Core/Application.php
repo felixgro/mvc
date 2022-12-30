@@ -3,7 +3,6 @@
 namespace App\Core;
 
 use App\Core\Http\Request;
-use App\Core\Lib\Kernel;
 
 class Application
 {
@@ -95,14 +94,15 @@ class Application
 	private function loadProviders(): void
 	{
 		// first, all core providers since they're essential for a working application
-		foreach (glob(path('app/Core/Providers/*ServiceProvider.php')) as $providerPath) {
-			$this->providers[] = str_replace('/', '\\', ucfirst(substr($providerPath, 0, -4)));
+		foreach (glob(path('../app/Core/Providers/*ServiceProvider.php')) as $providerPath) {
+			$class = str_replace('/', '\\', substr($providerPath, 0, -4));
+			$this->providers[] = ucfirst(str_replace('..\\', '', $class));
 		}
 
 		// afterwards, all custom defined providers
 		$this->providers = array_merge(
 			$this->providers,
-			(require_once 'config/app.php')['providers']
+			(require_once path('../config/app.php'))['providers']
 		);
 	}
 

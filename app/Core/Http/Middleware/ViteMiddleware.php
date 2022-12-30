@@ -14,7 +14,7 @@ class ViteMiddleware implements Middleware
 		$path = $request->getPathInfo();
 
 		if (str_starts_with($path, '/assets')) {
-			header("Location: http://localhost:5134" . $path);
+			header("Location: http://localhost:5134$path");
 			exit;
 		}
 	}

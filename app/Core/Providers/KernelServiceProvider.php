@@ -4,8 +4,8 @@ namespace App\Core\Providers;
 
 use App\Core\Container;
 use App\Core\Contracts\ServiceProvider;
-use App\Core\Lib\ControllerResolver;
-use App\Core\Lib\EventDispatcher;
+use App\Core\Support\ControllerResolver;
+use App\Core\Support\EventDispatcher;
 use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 

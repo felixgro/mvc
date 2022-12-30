@@ -4,8 +4,6 @@ namespace App\Core\Providers;
 
 use App\Core\Container;
 use App\Core\Contracts\ServiceProvider;
-use App\Core\Lib\EventDispatcher;
-use Symfony\Component\HttpKernel\Event\RequestEvent;
 
 class MiddlewareServiceProvider implements ServiceProvider
 {
@@ -17,11 +15,7 @@ class MiddlewareServiceProvider implements ServiceProvider
 	 */
 	public static function register(Container $c)
 	{
-		$middlewareFiles = glob(path('app/Lib/Http/Middleware/*.php'));
-
-		foreach ($middlewareFiles as $file) {
-			self::$globalMiddleware[] = str_replace('/', '\\', ucfirst(substr($file, 0, -4)));
-		}
+		//
 	}
 
 	/**
@@ -29,6 +23,7 @@ class MiddlewareServiceProvider implements ServiceProvider
 	 */
 	public static function boot(Container $c)
 	{
+		/*
 		$dispatcher = $c->resolve(EventDispatcher::class);
 
 		$dispatcher->addListener('kernel.request', function (RequestEvent $event) {
@@ -37,5 +32,6 @@ class MiddlewareServiceProvider implements ServiceProvider
 				($middleware)::handle($request);
 			}
 		});
+		*/
 	}
 }

@@ -67,9 +67,15 @@ class Router
 
 		if (array_key_exists($path, $mappings)) {
 			return function () use ($mappings, $path) {
-				$method = $mappings[$path];
 				$this->executeGlobalMiddleware();
-				return $this->container->executeMethod($method[0], $method[1]);
+				return $this->container->executeMethod($mappings[$path]);
+			};
+		}
+
+		// TODO: Refactor asset path to use global middleware through service provider
+		if (str_starts_with($path, '/assets')) {
+			return function () {
+				$this->executeGlobalMiddleware();
 			};
 		}
 
@@ -135,8 +141,8 @@ class Router
 	 */
 	public function executeMiddleware(string $middleware): void
 	{
-		$res = $this->container->executeMethod($middleware, '__invoke');
-		
+		$res = $this->container->executeMethod([$middleware, '__invoke']);
+
 		if (isset($res) && $res instanceof Response) {
 			exit($res->send());
 		}

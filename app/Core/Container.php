@@ -3,6 +3,7 @@
 namespace App\Core;
 
 use ReflectionClass;
+use ReflectionFunction;
 use Exception;
 
 class Container
@@ -54,8 +55,15 @@ class Container
 	 * then the specified method gets executed after all required method params
 	 * have been built successfully.
 	 */
-	public function executeMethod(string $abstract, string $method): mixed
+	public function executeMethod(mixed $action): mixed
 	{
+		if (!is_array($action) && is_callable($action)) {
+			return $this->executeCallback($action);
+		}
+
+		$abstract = $action[0];
+		$method = $action[1];
+
 		$reflection = new ReflectionClass($abstract);
 		$instance = $this->createNewInstance($reflection, false);
 		$deps = $this->buildDependencies($reflection, $method);
@@ -120,6 +128,16 @@ class Container
 	}
 
 	/**
+	 * Executes a callback and tries to inject all required dependencies.
+	 */
+	private function executeCallback(callable $action): mixed
+	{
+		$function = new ReflectionFunction($action);
+		$args = $this->buildDependencies($function);
+		return $action(...$args);
+	}
+
+	/**
 	 * Instantiates a class by a given abstract or reflection class. If cache is true,
 	 * the newly created instance will get stored in the container.
 	 */
@@ -140,7 +158,7 @@ class Container
 	 * Recursively tries to build all required parameters either for a
 	 * classes constructor or one specific method of it.
 	 */
-	private function buildDependencies(ReflectionClass $reflection, string $method = ""): array
+	private function buildDependencies(ReflectionClass|ReflectionFunction $reflection, string $method = ""): array
 	{
 		if (!empty($method)) {
 			if (!$method = $reflection->getMethod($method)) {
@@ -148,6 +166,10 @@ class Container
 			};
 
 			if (empty($params = $method->getParameters())) {
+				return [];
+			}
+		} elseif ($reflection instanceof ReflectionFunction) {
+			if (empty($params = $reflection->getParameters())) {
 				return [];
 			}
 		} else {

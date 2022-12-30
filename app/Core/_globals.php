@@ -3,6 +3,8 @@
 use App\Core\Application;
 use App\Core\Http\Response;
 use App\Core\Support\View;
+use App\Core\Support\Config;
+use App\Core\Support\Env;
 
 /**
  * Main entry point when interacting with the application.
@@ -21,11 +23,23 @@ function app(string $abstract = ''): mixed
 }
 
 /**
- * Resolves data from config files.
+ * Main entry point for getting application config data.
+ * Config name can either be the name of the config file (without .php extension) or
+ * a specific config value using dot notation:
+ * "app.name" => name value in app.php config file
  */
-function config(string $name): mixed
+function config(string $name, mixed $default = null): mixed
 {
-	return app()->get("config.$name");
+	return app(Config::class)->get($name, $default);
+}
+
+/**
+ * Main entry point for getting application environment data.
+ * Returns specified default if no value found.
+ */
+function env(string $key, mixed $default = null): mixed
+{
+	return app(Env::class)->get($key, $default);
 }
 
 /**
@@ -73,6 +87,8 @@ function abort(int $status, $message = null)
  */
 function path(string $path, bool $generateDirs = true): string
 {
+	if (!str_starts_with($path, "../")) $path = "../" . $path;
+
 	if (str_starts_with($path, '/')) $path = ltrim($path, '/');
 	$path = str_replace('/', DIRECTORY_SEPARATOR, $path);
 	$dirName = pathinfo($path, PATHINFO_DIRNAME);
@@ -203,7 +219,7 @@ function assetUrl(string $entry): string
 	$manifest = getManifest();
 
 	return isset($manifest[$entry])
-		? '/public/build/' . $manifest[$entry]['file']
+		? '/build/' . $manifest[$entry]['file']
 		: '';
 }
 
@@ -214,7 +230,7 @@ function importsUrls(string $entry): array
 
 	if (!empty($manifest[$entry]['imports'])) {
 		foreach ($manifest[$entry]['imports'] as $imports) {
-			$urls[] = '/public/build/' . $manifest[$imports]['file'];
+			$urls[] = '/build/' . $manifest[$imports]['file'];
 		}
 	}
 	return $urls;
@@ -227,7 +243,7 @@ function cssUrls(string $entry): array
 
 	if (!empty($manifest[$entry]['css'])) {
 		foreach ($manifest[$entry]['css'] as $file) {
-			$urls[] = '/public/build/' . $file;
+			$urls[] = '/build/' . $file;
 		}
 	}
 	return $urls;

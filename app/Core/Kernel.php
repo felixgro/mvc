@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Core\Support;
+namespace App\Core;
 
 use Symfony\Component\HttpKernel\HttpKernel;
 

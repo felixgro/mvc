@@ -9,19 +9,19 @@ export default defineConfig({
 
     base: process.env.APP_ENV === 'development'
         ? '/'
-        : '/public/build/',
+        : '/build/',
 
     plugins: [
         vue(),
         liveReload([
             __dirname + '/(app|config|resources)/**/*.php',
-            __dirname + '/index.php',
+            __dirname + '/public/index.php',
         ]),
         splitVendorChunkPlugin(),
     ],
 
     build: {
-        outDir: './../public/build',
+        outDir: './public/build',
         emptyOutDir: true,
         manifest: true,
         rollupOptions: {

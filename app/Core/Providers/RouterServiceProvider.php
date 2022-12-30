@@ -14,7 +14,7 @@ class RouterServiceProvider implements ServiceProvider
 	public static function register(Container $c)
 	{
 		$c->bind(Router::class, function () use ($c) {
-			return new Router($c, 'app/routes.php');
+			return new Router($c, path('../app/routes.php'));
 		});
 	}
 
