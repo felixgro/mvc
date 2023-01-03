@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Core\Support;
+namespace App\Core\Services;
 
 class View
 {

@@ -2,9 +2,8 @@
 
 namespace App\Core\Providers;
 
-use App\Core\Container;
-use App\Core\Support\Env;
-use App\Core\Support\Config;
+use App\Core\Services\Config;
+use App\Core\Services\Env;
 
 class EnvServiceProvider extends ServiceProvider
 {

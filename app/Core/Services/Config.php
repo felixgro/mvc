@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Core\Support;
+namespace App\Core\Services;
 
+use App\Core\Support\File;
 use Exception;
 
 class Config
@@ -54,13 +55,14 @@ class Config
 			return $this->cache[$key];
 		}
 
-		$configFile = path($this->configDir . $key . '.php');
+		$configFile = $this->configDir . $key . '.php';
 
-		if (!file_exists($configFile)) {
+		if (File::missing($configFile)) {
 			throw new Exception("Could not find config file '$configFile'");
 		}
 
-		$this->cache[$key] = require($configFile);
+		$this->cache[$key] = File::require($configFile);;
+
 		return $this->cache[$key];
 	}
 }

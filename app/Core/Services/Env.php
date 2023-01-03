@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Core\Support;
+namespace App\Core\Services;
 
+use App\Core\Support\Singleton;
 use Dotenv\Dotenv;
 
 class Env extends Singleton

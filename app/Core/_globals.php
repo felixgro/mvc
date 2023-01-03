@@ -2,10 +2,11 @@
 
 use App\Core\Application;
 use App\Core\Http\Response;
-use App\Core\Support\View;
-use App\Core\Support\Config;
-use App\Core\Support\Env;
-use App\Core\Support\Vite;
+use App\Core\Http\Router;
+use App\Core\Services\Config;
+use App\Core\Services\Env;
+use App\Core\Services\View;
+use App\Core\Services\Vite;
 
 /**
  * Main entry point when interacting with the application.
@@ -17,7 +18,7 @@ function app(string $abstract = ''): mixed
 	$app = Application::getInstance();
 
 	if (!empty($abstract)) {
-		return $app->get($abstract);
+		return $app->resolve($abstract);
 	}
 
 	return $app;
@@ -106,8 +107,32 @@ function vite(string $entry): string
 	return app(Vite::class)->asset($entry);
 }
 
+function array_select(array $source, int $dimension, $value)
+{
+	// TODO: before starting recursion, make sure that $dimension >=1
+	// and the actual depth of $source is > $dimension
+
+	if ($dimension === 1) {
+		// return the value at that depth, empty if not set
+		return $source[$value] ?? [];
+	} else {
+
+		foreach ($source as $index => $subset) {
+			$source[$index] = array_select($subset, $dimension - 1, $value);
+		}
+
+		return $source;
+	}
+}
+
+function route(string $name): string
+{
+	$route = app(Router::class)->getRoute($name);
+	return $route->path;
+}
+
 /**
- * Converts a relative file path to an absolute one on the system.
+ * Converts a file path from project root to an absolute one on the system.
  * By default, this function generates all directories, which are missing.
  */
 function path(string $path, bool $generateDirs = true): string

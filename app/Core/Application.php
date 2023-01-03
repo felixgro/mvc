@@ -2,7 +2,7 @@
 
 namespace App\Core;
 
-use App\Core\Http\Request;
+use App\Core\Support\File;
 use App\Core\Support\Singleton;
 
 class Application extends Singleton
@@ -43,39 +43,9 @@ class Application extends Singleton
 	}
 
 	/**
-	 * Main entry point for the incoming http request.
-	 * This should be the only function call in the root
-	 * index.php file, and it's only dependency is the correct
-	 * vendor autoload file.
-	 */
-	public function handleRequest(): void
-	{
-		$kernel = $this->container->resolve(Kernel::class);
-		$request = $this->container->resolve(Request::class);
-
-		try {
-			$response = $kernel->handle($request);
-			$response->send();
-			$kernel->terminate($request, $response);
-		} catch (\Throwable $exception) {
-			dump('exception in http kernel:');
-			dd($exception);
-		}
-	}
-
-	/**
-	 * Tries to bind a factory to an abstract using the
-	 * application container.
-	 */
-	public function bind(string $abstract, callable $factory): void
-	{
-		$this->container->bind($abstract, $factory);
-	}
-
-	/**
 	 * Tries to resolve a class from the application container.
 	 */
-	public function get(string $abstract): mixed
+	public function resolve(string $abstract): mixed
 	{
 		return $this->container->resolve($abstract);
 	}
@@ -85,7 +55,7 @@ class Application extends Singleton
 	 */
 	private function loadProviders(): void
 	{
-		$providerClasses = (require('../config/app.php'))['providers'];
+		$providerClasses = File::require('config/app.php')['providers'];
 
 		foreach ($providerClasses as $providerClass) {
 			$this->providers[] = new $providerClass($this->container);
@@ -99,7 +69,6 @@ class Application extends Singleton
 	{
 		foreach ($this->providers as $provider) {
 			$this->container->executeMethod([$provider, 'register']);
-			// $provider->register($this->container);
 		}
 	}
 
@@ -110,7 +79,6 @@ class Application extends Singleton
 	{
 		foreach ($this->providers as $provider) {
 			$this->container->executeMethod([$provider, 'boot']);
-			// ($provider)::boot($this->container);
 		}
 	}
 }

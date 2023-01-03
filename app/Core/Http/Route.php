@@ -4,16 +4,18 @@ namespace App\Core\Http;
 
 class Route
 {
-	private array $middlewares = [];
-	private string $alias;
+	public string $path;
+	public string $alias;
+	public array $middlewares = [];
 
-	public function __construct()
+	public function __construct(string $path)
 	{
-
+		$this->path = sanitizeUriPath($path);
 	}
 
 	public function middleware(string $key): self
 	{
+		$this->middlewares[] = $key;
 		return $this;
 	}
 
@@ -21,10 +23,5 @@ class Route
 	{
 		$this->alias = $name;
 		return $this;
-	}
-
-	public function isAlias(string $alias): bool
-	{
-		return $this->alias === $alias;
 	}
 }

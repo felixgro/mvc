@@ -4,10 +4,8 @@ namespace App\Core\Providers;
 
 use App\Core\Http\Request;
 use App\Core\Http\Router;
-use App\Core\Support\EventDispatcher;
-use App\Core\Support\ControllerResolver;
+use App\Core\Services\ControllerResolver;
 use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
-use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 
 class HttpServiceProvider extends ServiceProvider
@@ -16,7 +14,7 @@ class HttpServiceProvider extends ServiceProvider
 
 	public function register()
 	{
-		$this->bindKernelContracts();
+		$this->bindKernelContract();
 		$this->bindRequest();
 		$this->bindRouter();
 	}
@@ -26,12 +24,8 @@ class HttpServiceProvider extends ServiceProvider
 		$router->loadRoutes();
 	}
 
-	private function bindKernelContracts(): void
+	private function bindKernelContract(): void
 	{
-		$this->container->bind(EventDispatcherInterface::class, function () {
-			return $this->container->resolve(EventDispatcher::class);
-		});
-
 		$this->container->bind(ControllerResolverInterface::class, function () {
 			return $this->container->resolve(ControllerResolver::class);
 		});

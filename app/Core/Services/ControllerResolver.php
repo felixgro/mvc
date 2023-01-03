@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Core\Support;
+namespace App\Core\Services;
 
 use App\Core\Http\Request;
 use App\Core\Http\Router;

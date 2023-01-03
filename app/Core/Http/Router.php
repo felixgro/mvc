@@ -3,6 +3,7 @@
 namespace App\Core\Http;
 
 use App\Core\Container;
+use Exception;
 
 class Router
 {
@@ -18,7 +19,7 @@ class Router
 	 *        ...
 	 *  ]
 	 */
-	private array $actions = [
+	private array $routes = [
 		'GET' => [],
 		'POST' => [],
 		'PUT' => [],
@@ -44,6 +45,11 @@ class Router
 	 */
 	private Container $container;
 
+	/**
+	 * Caching alias paths if used more than once.
+	 */
+	private array $aliasCache = [];
+
 	/*
 	 * Requires the absolute path to the route definition file.
 	 * When executing, this file can interact with the current
@@ -66,9 +72,12 @@ class Router
 		$mappings = $this->getActionMappings($request);
 
 		if (array_key_exists($path, $mappings)) {
-			return function () use ($mappings, $path) {
+			[$route, $action] = $mappings[$path];
+
+			return function () use ($route, $action) {
 				$this->executeGlobalMiddleware();
-				return $this->container->executeMethod($mappings[$path]);
+				$this->executeRouteMiddleware($route);
+				return $this->container->executeMethod($action);
 			};
 		}
 
@@ -85,37 +94,41 @@ class Router
 	/**
 	 * Registers a GET request callback.
 	 */
-	public function get($path, $action): void
+	public function get($path, $action): Route
 	{
-		$path = sanitizeUriPath($path);
-		$this->actions['GET'][$path] = $action;
+		$cleanPath = sanitizeUriPath($path);
+		$this->routes['GET'][$cleanPath] = [new Route($path), $action];
+		return $this->routes['GET'][$cleanPath][0];
 	}
 
 	/**
 	 * Registers a POST request callback.
 	 */
-	public function post($path, $action): void
+	public function post($path, $action): Route
 	{
-		$path = sanitizeUriPath($path);
-		$this->actions['POST'][$path] = $action;
+		$cleanPath = sanitizeUriPath($path);
+		$this->routes['POST'][$cleanPath] = [new Route($path), $action];
+		return $this->routes['POST'][$cleanPath][0];
 	}
 
 	/**
 	 * Registers a PUT request callback.
 	 */
-	public function put($path, $action): void
+	public function put($path, $action): Route
 	{
-		$path = sanitizeUriPath($path);
-		$this->actions['PUT'][$path] = $action;
+		$cleanPath = sanitizeUriPath($path);
+		$this->routes['PUT'][$cleanPath] = [new Route($path), $action];
+		return $this->routes['PUT'][$cleanPath][0];
 	}
 
 	/**
 	 * Registers a DELETE request callback.
 	 */
-	public function delete($path, $action): void
+	public function delete($path, $action): Route
 	{
-		$path = sanitizeUriPath($path);
-		$this->actions['DELETE'][$path] = $action;
+		$cleanPath = sanitizeUriPath($path);
+		$this->routes['DELETE'][$cleanPath] = [new Route($path), $action];
+		return $this->routes['DELETE'][$cleanPath][0];
 	}
 
 	/**
@@ -140,6 +153,28 @@ class Router
 		}
 	}
 
+	/**
+	 * Retrieve route by alias name.
+	 */
+	public function getRoute(string $alias): Route
+	{
+		if (!array_key_exists($alias, $this->aliasCache)) {
+			throw new Exception("Could not find route with name '$alias'");
+		}
+		
+		return $this->aliasCache[$alias];
+	}
+
+	/**
+	 * Executes all custom route middlewares.
+	 */
+	private function executeRouteMiddleware(Route $route): void
+	{
+		foreach ($route->middlewares as $middleware) {
+			$this->executeMiddleware($middleware);
+		}
+	}
+
 	/*
 	 * Executes a single middleware.
 	 */
@@ -160,6 +195,22 @@ class Router
 	{
 		$router = $this;
 		require_once $this->routeDefinitionFile;
+		$this->cacheAliases();
+	}
+
+	/**
+	 * Cache aliases for future references.
+	 */
+	private function cacheAliases(): void
+	{
+		foreach ($this->routes as $methodMapping) {
+			foreach ($methodMapping as $routeBinding) {
+				$route = $routeBinding[0];
+				if (!empty($route->alias)) {
+					$this->aliasCache[$route->alias] = $route;
+				}
+			}
+		}
 	}
 
 	/**
@@ -167,6 +218,6 @@ class Router
 	 */
 	private function getActionMappings(Request $request): array
 	{
-		return $this->actions[$request->getMethod()];
+		return $this->routes[$request->getMethod()];
 	}
 }

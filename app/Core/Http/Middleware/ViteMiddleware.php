@@ -4,7 +4,7 @@ namespace App\Core\Http\Middleware;
 
 use App\Core\Contracts\Middleware;
 use App\Core\Http\Request;
-use App\Core\Support\Vite;
+use App\Core\Services\Vite;
 
 class ViteMiddleware implements Middleware
 {
