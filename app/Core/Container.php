@@ -65,7 +65,7 @@ class Container
 		$method = $action[1];
 
 		$reflection = new ReflectionClass($abstract);
-		$instance = $this->createNewInstance($reflection, false);
+		$instance = is_object($abstract) ? $abstract : $this->createNewInstance($reflection, false);
 		$deps = $this->buildDependencies($reflection, $method);
 
 		if (!method_exists($instance, $method)) {

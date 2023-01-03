@@ -3,24 +3,25 @@
 namespace App\Core\Providers;
 
 use App\Core\Container;
-use App\Core\Contracts\ServiceProvider;
 use App\Core\Support\Env;
 use App\Core\Support\Config;
 
-class EnvServiceProvider implements ServiceProvider
+class EnvServiceProvider extends ServiceProvider
 {
-	public static function register(Container $c)
+	private string $configDir = 'config/';
+
+	public function register()
 	{
-		$c->bind(Env::class, function () {
+		$this->container->bind(Env::class, function () {
 			return Env::getInstance();
 		});
 
-		$c->bind(Config::class, function () {
-			return new Config(path('../config/'));
+		$this->container->bind(Config::class, function () {
+			return new Config(path($this->configDir));
 		});
 	}
 
-	public static function boot(Container $c)
+	public function boot()
 	{
 		//
 	}

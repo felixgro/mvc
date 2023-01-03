@@ -5,7 +5,7 @@ namespace App\Core\Support;
 /**
  * Extend this class for an enhanced singleton.
  */
-class Singleton
+abstract class Singleton
 {
 	/**
 	 * The actual singleton's instance almost always resides inside a static

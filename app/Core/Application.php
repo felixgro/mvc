@@ -81,30 +81,36 @@ class Application extends Singleton
 	}
 
 	/**
-	 * Loads all service providers for the application.
+	 * Instantiate all service providers for the application.
 	 */
 	private function loadProviders(): void
 	{
-		$this->providers = (require('../config/app.php'))['providers'];
+		$providerClasses = (require('../config/app.php'))['providers'];
+
+		foreach ($providerClasses as $providerClass) {
+			$this->providers[] = new $providerClass($this->container);
+		}
 	}
 
 	/**
-	 * Executes static register method on all providers.
+	 * Executes register method on all providers.
 	 */
 	private function registerProviders(): void
 	{
 		foreach ($this->providers as $provider) {
-			($provider)::register($this->container);
+			$this->container->executeMethod([$provider, 'register']);
+			// $provider->register($this->container);
 		}
 	}
 
 	/*
-	 * Executes static boot method on all providers.
+	 * Executes boot method on all providers.
 	 */
 	private function bootProviders(): void
 	{
 		foreach ($this->providers as $provider) {
-			($provider)::boot($this->container);
+			$this->container->executeMethod([$provider, 'boot']);
+			// ($provider)::boot($this->container);
 		}
 	}
 }

@@ -2,31 +2,26 @@
 
 namespace App\Providers;
 
-use App\Core\Container;
-use App\Core\Contracts\ServiceProvider;
+use App\Core\Providers\ServiceProvider;
 use App\Core\Http\Middleware\AuthMiddleware;
 use App\Core\Http\Middleware\ViteMiddleware;
 use App\Core\Http\Router;
 
-use function config;
-
-class AppServiceProvider implements ServiceProvider
+class AppServiceProvider extends ServiceProvider
 {
-	public static function register(Container $c)
+	public function register()
 	{
 		//
 	}
 
-	public static function boot(Container $c)
+	public function boot(Router $router)
 	{
-		$router = app(Router::class);
-
 		// setup global application middleware
 		$router->addGlobalMiddleware([
 			AuthMiddleware::class,
 		]);
 
-		if (config('app.env') === 'development') {
+		if ($this->inEnvironment('development')) {
 			$router->addGlobalMiddleware(ViteMiddleware::class);
 		}
 	}

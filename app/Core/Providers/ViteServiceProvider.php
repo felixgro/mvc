@@ -2,20 +2,18 @@
 
 namespace App\Core\Providers;
 
-use App\Core\Container;
-use App\Core\Contracts\ServiceProvider;
 use App\Core\Support\Vite;
 
-class ViteServiceProvider implements ServiceProvider
+class ViteServiceProvider extends ServiceProvider
 {
-	public static function register(Container $c)
+	public function register()
 	{
 		//
 	}
 
-	public static function boot(Container $c)
+	public function boot()
 	{
-		$c->bind(Vite::class, function () {
+		$this->container->bind(Vite::class, function () {
 			$host = 'http://' . config('vite.host') . ':' . config('vite.port');
 			$manifest = path(config('vite.manifest'));
 
