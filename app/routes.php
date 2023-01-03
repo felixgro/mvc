@@ -1,6 +1,6 @@
 <?php
 
-/** @var App\Core\Http\Router $router */
+/** @var Core\Http\Router $router */
 
 use App\Controller\HomeController;
 
@@ -12,6 +12,9 @@ $router->get('/about', [HomeController::class, 'about']);
 $router->get('/auth', [HomeController::class, 'auth'])
 	->middleware(\App\Middleware\AuthMiddleware::class);
 
-$router->get('/test', function () {
-	return json(route('about'));
+$router->get('/test', function (\Core\Database\Database $db) {
+
+
+	dd($db->query('SELECT * FROM users'));
+
 });

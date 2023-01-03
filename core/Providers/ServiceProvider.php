@@ -52,4 +52,12 @@ abstract class ServiceProvider
 	{
 		return config('app.env') === $env;
 	}
+
+	/**
+	 * Checks if application gets executed as through the command line.
+	 */
+	protected function inTerminal(): bool
+	{
+		return constant('TERMINAL_EXECUTION') === true;
+	}
 }

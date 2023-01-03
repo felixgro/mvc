@@ -137,7 +137,9 @@ function route(string $name): string
  */
 function path(string $path, bool $generateDirs = true): string
 {
-	if (!str_starts_with($path, "../")) $path = "../" . $path;
+	if (constant('TERMINAL_EXECUTION') === 0) {
+		if (!str_starts_with($path, "../")) $path = "../" . $path;
+	}
 
 	if (str_starts_with($path, '/')) $path = ltrim($path, '/');
 	$path = str_replace('/', DIRECTORY_SEPARATOR, $path);

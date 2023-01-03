@@ -27,6 +27,7 @@ return [
 		# Core Service Providers (Don't touch those if you don't know what you're doing)
 		'Core\Providers\EnvServiceProvider',
 		'Core\Providers\EventServiceProvider',
+		'Core\Providers\DatabaseServiceProvider',
 		'Core\Providers\HttpServiceProvider',
 		'Core\Providers\ViteServiceProvider',
 
