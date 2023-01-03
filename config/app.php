@@ -25,10 +25,10 @@ return [
 	 */
 	'providers' => [
 		# Core Service Providers (Don't touch those if you don't know what you're doing)
-		'App\Core\Providers\EnvServiceProvider',
-		'App\Core\Providers\EventServiceProvider',
-		'App\Core\Providers\HttpServiceProvider',
-		'App\Core\Providers\ViteServiceProvider',
+		'Core\Providers\EnvServiceProvider',
+		'Core\Providers\EventServiceProvider',
+		'Core\Providers\HttpServiceProvider',
+		'Core\Providers\ViteServiceProvider',
 
 		# Custom application Service Providers (add as many as you like)
 		'App\Providers\AppServiceProvider',

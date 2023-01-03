@@ -18,10 +18,11 @@
   },
   "autoload": {
     "psr-4": {
-      "App\\": "app"
+      "App\\": "app",
+      "Core\\": "core"
     },
     "files": [
-      "app/Core/_globals.php"
+      "core/globals.php"
     ]
   },
   "require-dev": {

@@ -2,10 +2,9 @@
 
 namespace App\Providers;
 
-use App\Core\Providers\ServiceProvider;
-use App\Core\Http\Middleware\AuthMiddleware;
-use App\Core\Http\Middleware\ViteMiddleware;
-use App\Core\Http\Router;
+use Core\Providers\ServiceProvider;
+use Core\Http\Middleware\ViteMiddleware;
+use Core\Http\Router;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -18,7 +17,7 @@ class AppServiceProvider extends ServiceProvider
 	{
 		// setup global application middleware
 		$router->addGlobalMiddleware([
-			AuthMiddleware::class,
+			// ...
 		]);
 
 		if ($this->inEnvironment('development')) {

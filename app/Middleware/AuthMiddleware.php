@@ -2,6 +2,7 @@
 
 namespace App\Middleware;
 
+
 class AuthMiddleware
 {
 	/**
