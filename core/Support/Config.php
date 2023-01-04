@@ -1,6 +1,6 @@
 <?php
 
-namespace Core\Services;
+namespace Core\Support;
 
 use Core\Facades\File;
 use Exception;

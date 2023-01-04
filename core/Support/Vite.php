@@ -1,8 +1,9 @@
 <?php
 
-namespace Core\Services;
+namespace Core\Support;
 
 use Core\Http\Request;
+use function Core\Services\str_starts_with;
 
 class Vite
 {

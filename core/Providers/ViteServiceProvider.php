@@ -2,7 +2,7 @@
 
 namespace Core\Providers;
 
-use Core\Services\Vite;
+use Core\Support\Vite;
 
 class ViteServiceProvider extends ServiceProvider
 {

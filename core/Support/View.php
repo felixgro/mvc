@@ -1,6 +1,6 @@
 <?php
 
-namespace Core\Services;
+namespace Core\Support;
 
 class View
 {

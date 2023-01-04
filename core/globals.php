@@ -3,10 +3,10 @@
 use Core\Application;
 use Core\Http\Response;
 use Core\Http\Router;
-use Core\Services\Config;
-use Core\Services\Env;
-use Core\Services\View;
-use Core\Services\Vite;
+use Core\Support\Config;
+use Core\Support\Env;
+use Core\Support\View;
+use Core\Support\Vite;
 
 /**
  * Main entry point when interacting with the application.
@@ -135,7 +135,7 @@ function route(string $name): string
  * Converts a file path from project root to an absolute one on the system.
  * By default, this function generates all directories, which are missing.
  */
-function path(string $path, bool $generateDirs = true): string
+function path(string $path, bool $generateDirs = false): string
 {
 	if (php_sapi_name() !== 'cli') {
 		if (!str_starts_with($path, "../")) $path = "../" . $path;

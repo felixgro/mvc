@@ -2,9 +2,9 @@
 
 namespace Core\Providers;
 
+use Core\Http\ControllerResolver;
 use Core\Http\Request;
 use Core\Http\Router;
-use Core\Services\ControllerResolver;
 use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
 
 

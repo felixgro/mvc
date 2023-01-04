@@ -5,7 +5,7 @@ namespace Core\Support;
 class File
 {
 	/**
-	 * Execute and return the execution result of a php file.
+	 * Returns the execution result of a required php file.
 	 */
 	public function require(string $path): mixed
 	{

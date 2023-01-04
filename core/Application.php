@@ -3,10 +3,14 @@
 namespace Core;
 
 use Core\Facades\File;
-use Core\Support\Singleton;
 
-class Application extends Singleton
+class Application
 {
+	/**
+	 * Reference to the one and only application instance.
+	 */
+	private static Application $instance;
+
 	/**
 	 * The dependency injections container for handling
 	 * all application class instances and singletons as well
@@ -22,24 +26,31 @@ class Application extends Singleton
 	private array $providers = [];
 
 	/**
-	 * Privately constructs the application to prevent
-	 * the generation of multiple instances.
+	 * Privately constructs the application to prevent the generation
+	 * of multiple instances and enforce the use of the getInstance() static method.
 	 */
-	protected function __construct()
+	private function __construct()
 	{
 		$this->container = new Container();
 	}
 
 	/**
-	 * Gets called after the first singleton instance
-	 * has been constructed. This enables the use of
-	 * application methods using app() within provider methods.
+	 * Retrieves singleton instance of the application. Acts as entry point
+	 * for application & container requests and also used by the global app() function.
+	 * This should be the only singleton instance in the whole application which is
+	 * directly instantiated through class methods. Any other application singleton
+	 * should directly be registered as a singleton from within a service container.
 	 */
-	protected function __constructed()
+	public static function getInstance(): Application
 	{
-		$this->loadProviders();
-		$this->registerProviders();
-		$this->bootProviders();
+		if (!isset(static::$instance)) {
+			static::$instance = new Application();
+			static::$instance->loadProviders();
+			static::$instance->registerProviders();
+			static::$instance->bootProviders();
+		}
+
+		return static::$instance;
 	}
 
 	/**

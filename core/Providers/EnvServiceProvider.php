@@ -2,8 +2,8 @@
 
 namespace Core\Providers;
 
-use Core\Services\Config;
-use Core\Services\Env;
+use Core\Support\Config;
+use Core\Support\Env;
 
 class EnvServiceProvider extends ServiceProvider
 {
