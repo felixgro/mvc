@@ -4,7 +4,10 @@ namespace Core;
 
 use ReflectionClass;
 use ReflectionFunction;
+use ReflectionParameter;
+use ReflectionType;
 use Exception;
+use Throwable;
 
 class Container
 {
@@ -18,6 +21,7 @@ class Container
 	 */
 	private array $singletons = [];
 
+
 	/**
 	 * Resolves a value based of an abstract from the container.
 	 * If none stored, the containers tries to instantiate a class
@@ -26,7 +30,6 @@ class Container
 	 */
 	public function resolve(string $abstract): mixed
 	{
-		// $this->debugResolving($abstract);
 		if ($this->hasBinding($abstract)) {
 			return $this->resolveBinding($abstract);
 		}
@@ -42,12 +45,20 @@ class Container
 	public function bind(string $abstract, callable $factory, bool $singleton = true): self
 	{
 		$this->bindings[$abstract] = $factory;
+		return $this;
+	}
 
-		if ($singleton) {
-			$this->singletons[$abstract] = null;
+	/**
+	 * Registers a new factory for a singleton instance in the container.
+	 */
+	public function singleton(string $abstract, callable $factory = null): self
+	{
+		if (is_null($factory)) {
+			$factory = fn() => new $abstract();
 		}
 
-		return $this;
+		$this->singletons[$abstract] = null;
+		return $this->bind($abstract, $factory);
 	}
 
 	/**
@@ -57,20 +68,14 @@ class Container
 	 */
 	public function executeMethod(mixed $action): mixed
 	{
-		if (!is_array($action) && is_callable($action)) {
+		if ($this->isCallbackAction($action)) {
 			return $this->executeCallback($action);
 		}
 
-		$abstract = $action[0];
-		$method = $action[1];
+		[$abstract, $method] = $action;
 
-		$reflection = new ReflectionClass($abstract);
-		$instance = is_object($abstract) ? $abstract : $this->createNewInstance($reflection, false);
+		$instance = $this->getInstance($abstract, $reflection);
 		$deps = $this->buildDependencies($reflection, $method);
-
-		if (!method_exists($instance, $method)) {
-			throw new Exception("Method '$method' does not exists in $abstract");
-		}
 
 		return $instance->$method(...$deps);
 	}
@@ -138,10 +143,20 @@ class Container
 	}
 
 	/**
+	 * Generates a reflection class from the giving abstract. If abstract is of type
+	 * string, a fresh instance will be created.
+	 */
+	private function getInstance(object|string $abstract, &$reflection): mixed
+	{
+		$reflection = new ReflectionClass($abstract);
+		return is_object($abstract) ? $abstract : $this->createNewInstance($reflection);
+	}
+
+	/**
 	 * Instantiates a class by a given abstract or reflection class. If cache is true,
 	 * the newly created instance will get stored in the container.
 	 */
-	private function createNewInstance(string|ReflectionClass $abstract, bool $cache = true): mixed
+	private function createNewInstance(string|ReflectionClass $abstract, bool $cache = false): mixed
 	{
 		$reflection = is_string($abstract) ? new ReflectionClass($abstract) : $abstract;
 		$deps = $this->buildDependencies($reflection);
@@ -160,35 +175,17 @@ class Container
 	 */
 	private function buildDependencies(ReflectionClass|ReflectionFunction $reflection, string $method = ""): array
 	{
-		if (!empty($method)) {
-			if (!$method = $reflection->getMethod($method)) {
-				return [];
-			};
-
-			if (empty($params = $method->getParameters())) {
-				return [];
-			}
-		} elseif ($reflection instanceof ReflectionFunction) {
-			if (empty($params = $reflection->getParameters())) {
-				return [];
-			}
-		} else {
-			if (!$constructor = $reflection->getConstructor()) {
-				return [];
-			}
-
-			if (empty($params = $constructor->getParameters())) {
-				return [];
-			}
-		}
+		$params = $this->resolveReflectionParameters($reflection, $method);
 
 		$params = array_filter($params, function ($param) {
 			return !$param->isDefaultValueAvailable();
 		});
 
 		return array_map(function ($param) {
-			if (!$type = $param->getType()) {
-				throw new Exception("$param has no type specified.");
+			$type = $this->getParameterType($param);
+
+			if ($this->isNativeType($type)) {
+				throw new Exception("Cannot resolve parameter $param using native type annotation ($type)");
 			}
 
 			return $this->resolve($type->getName());
@@ -196,24 +193,66 @@ class Container
 	}
 
 	/**
-	 * A quick and sloppy debugging helper.
+	 * Returns an array which contains the necessary parameters of a specified reflection class or function.
+	 * If this method receives a reflection class without any specific method name the constructors parameters will get returned.
 	 */
-	private function debugResolving(string $abstract)
+	private function resolveReflectionParameters(ReflectionClass|ReflectionFunction $reflection, string $method = ''): array
 	{
-		$output = $abstract . ' ';
-		$state = [];
-
-		if ($this->hasBinding($abstract)) {
-			$state[] = 'has binding';
+		if (!empty($method)) {
+			if (!$method = $reflection->getMethod($method)) {
+				return [];
+			}
+			return $method->getParameters();
+		} elseif ($reflection instanceof ReflectionFunction) {
+			return $reflection->getParameters();
 		}
 
-		if (!empty($state)) {
-			$output .= '(' . join(', ', $state) . ')';
-		} else {
-			$output .= '(resolving)';
+		// Fallback to constructor
+		if (!$constructor = $reflection->getConstructor()) {
+			return [];
 		}
 
-		echo $output;
-		echo "<br>";
+		return $constructor->getParameters();
+	}
+
+	/**
+	 * Returns the reflection type of a given parameter.
+	 * If no type specified, an exception is thrown.
+	 */
+	private function getParameterType(ReflectionParameter $param): ReflectionType
+	{
+		if (!$type = $param->getType()) {
+			throw new Exception("Parameter $param has no type specified.");
+		}
+
+		return $type;
+	}
+
+	/**
+	 * Checks if a provided type string is a native type.
+	 * php docs regarding floats: for historical reasons "double" is returned in case of a float, and not simply "float"
+	 */
+	private function isNativeType(string $type): bool
+	{
+		return in_array($type, [
+			"boolean",
+			"integer",
+			"double",
+			"string",
+			"array",
+			"object",
+			"resource",
+			"resource (closed)",
+			"NULL",
+			"unknown type"
+		]);
+	}
+
+	/**
+	 * Determines if the provided action is a single callback functions.
+	 */
+	private function isCallbackAction(mixed $action): bool
+	{
+		return !is_array($action) && is_callable($action);
 	}
 }

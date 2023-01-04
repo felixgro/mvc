@@ -26,22 +26,23 @@ class HttpServiceProvider extends ServiceProvider
 
 	private function bindKernelContract(): void
 	{
-		$this->container->bind(ControllerResolverInterface::class, function () {
-			return $this->container->resolve(ControllerResolver::class);
+		$this->app->singleton(ControllerResolverInterface::class, function ($c) {
+			return $c->resolve(ControllerResolver::class);
 		});
 	}
 
 	private function bindRequest(): void
 	{
-		$this->container->bind(Request::class, function () {
+		$this->app->singleton(Request::class, function () {
 			return Request::createFromGlobals();
 		});
 	}
 
 	private function bindRouter(): void
 	{
-		$this->container->bind(Router::class, function () {
-			return new Router($this->container, path($this->routeDefinitionFile));
+		$this->app->singleton(Router::class, function ($c) {
+			$routeDefinitionPath = path($this->routeDefinitionFile);
+			return new Router($c, $routeDefinitionPath);
 		});
 	}
 }

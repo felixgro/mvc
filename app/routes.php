@@ -12,9 +12,4 @@ $router->get('/about', [HomeController::class, 'about']);
 $router->get('/auth', [HomeController::class, 'auth'])
 	->middleware(\App\Middleware\AuthMiddleware::class);
 
-$router->get('/test', function (\Core\Database\Database $db) {
-
-
-	dd($db->query('SELECT * FROM users'));
-
-});
+$router->get('/test', [HomeController::class, 'test']);

@@ -13,7 +13,7 @@ class ViteServiceProvider extends ServiceProvider
 
 	public function boot()
 	{
-		$this->container->bind(Vite::class, function () {
+		$this->app->bind(Vite::class, function () {
 			$host = 'http://' . config('vite.host') . ':' . config('vite.port');
 			$manifest = path(config('vite.manifest'));
 

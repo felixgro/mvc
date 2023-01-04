@@ -17,11 +17,11 @@ function app(string $abstract = ''): mixed
 {
 	$app = Application::getInstance();
 
-	if (!empty($abstract)) {
-		return $app->resolve($abstract);
+	if (empty($abstract)) {
+		return $app;
 	}
 
-	return $app;
+	return $app->resolve($abstract);
 }
 
 /**
@@ -41,7 +41,7 @@ function config(string $name, mixed $default = null): mixed
  */
 function env(string $key, mixed $default = null): mixed
 {
-	return Env::getInstance()->get($key, $default);
+	return app(Env::class)->get($key, $default);
 }
 
 /**
@@ -137,7 +137,7 @@ function route(string $name): string
  */
 function path(string $path, bool $generateDirs = true): string
 {
-	if (constant('TERMINAL_EXECUTION') === 0) {
+	if (php_sapi_name() !== 'cli') {
 		if (!str_starts_with($path, "../")) $path = "../" . $path;
 	}
 

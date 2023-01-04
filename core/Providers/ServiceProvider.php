@@ -2,7 +2,7 @@
 
 namespace Core\Providers;
 
-use Core\Container;
+use Core\Application;
 
 /*
  * A service provider is used to interact with the application service container.
@@ -18,7 +18,7 @@ abstract class ServiceProvider
 	 * classes within the container during registration and boot events.
 	 */
 	public function __construct(
-		protected Container $container
+		protected Application $app
 	)
 	{
 	}
@@ -58,6 +58,6 @@ abstract class ServiceProvider
 	 */
 	protected function inTerminal(): bool
 	{
-		return constant('TERMINAL_EXECUTION') === true;
+		return php_sapi_name() === 'cli';
 	}
 }

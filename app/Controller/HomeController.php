@@ -23,4 +23,9 @@ class HomeController extends Controller
 	{
 		return json('Hello user!');
 	}
+
+	public function test(): Response
+	{
+		return json('Hi');
+	}
 }

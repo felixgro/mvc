@@ -2,7 +2,7 @@
 
 namespace Core\Services;
 
-use Core\Support\File;
+use Core\Facades\File;
 use Exception;
 
 class Config

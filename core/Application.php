@@ -2,7 +2,7 @@
 
 namespace Core;
 
-use Core\Support\File;
+use Core\Facades\File;
 use Core\Support\Singleton;
 
 class Application extends Singleton
@@ -28,17 +28,17 @@ class Application extends Singleton
 	protected function __construct()
 	{
 		$this->container = new Container();
-		$this->loadProviders();
-		$this->registerProviders();
 	}
 
 	/**
 	 * Gets called after the first singleton instance
 	 * has been constructed. This enables the use of
-	 * application methods using app() within boot methods.
+	 * application methods using app() within provider methods.
 	 */
 	protected function __constructed()
 	{
+		$this->loadProviders();
+		$this->registerProviders();
 		$this->bootProviders();
 	}
 
@@ -51,14 +51,30 @@ class Application extends Singleton
 	}
 
 	/**
+	 * Binds a class in the application container.
+	 */
+	public function bind(string $abstract, callable $factory): void
+	{
+		$this->container->bind($abstract, $factory);
+	}
+
+	/**
+	 * Binds a singleton in the application container.
+	 */
+	public function singleton(string $abstact, callable $factory = null): void
+	{
+		$this->container->singleton($abstact, $factory);
+	}
+
+	/**
 	 * Instantiate all service providers for the application.
 	 */
 	private function loadProviders(): void
 	{
-		$providerClasses = File::require('config/app.php')['providers'];
+		$ProviderClasses = File::require('config/app.php')['providers'];
 
-		foreach ($providerClasses as $providerClass) {
-			$this->providers[] = new $providerClass($this->container);
+		foreach ($ProviderClasses as $ProviderClass) {
+			$this->providers[] = new $ProviderClass($this);
 		}
 	}
 

@@ -11,12 +11,11 @@ class EnvServiceProvider extends ServiceProvider
 
 	public function register()
 	{
-		$this->container->bind(Env::class, function () {
-			return Env::getInstance();
-		});
+		$this->app->singleton(Env::class);
 
-		$this->container->bind(Config::class, function () {
-			return new Config(path($this->configDir));
+		$this->app->singleton(Config::class, function () {
+			$configDir = path($this->configDir);
+			return new Config($configDir);
 		});
 	}
 

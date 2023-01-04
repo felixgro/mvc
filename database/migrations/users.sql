@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS `users`
 (
-    `id`                bigint UNSIGNED NOT NULL,
+    `id`                bigint UNSIGNED NOT NULL ,
     `name`              varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
     `email`             varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
     `password`          varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,

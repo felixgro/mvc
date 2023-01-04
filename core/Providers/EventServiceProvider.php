@@ -10,8 +10,8 @@ class EventServiceProvider extends ServiceProvider
 {
 	public function register()
 	{
-		$this->container->bind(EventDispatcherInterface::class, function () {
-			return $this->container->resolve(EventDispatcher::class);
+		$this->app->singleton(EventDispatcherInterface::class, function ($c) {
+			return $c->resolve(EventDispatcher::class);
 		});
 	}
 
