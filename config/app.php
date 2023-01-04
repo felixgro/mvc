@@ -29,6 +29,7 @@ return [
 		'Core\Providers\EventServiceProvider',
 		'Core\Providers\DatabaseServiceProvider',
 		'Core\Providers\HttpServiceProvider',
+		'Core\Providers\ConsoleServiceProvider',
 		'Core\Providers\ViteServiceProvider',
 
 		# Custom application Service Providers (add as many as you like)
