@@ -1,10 +1,9 @@
 <?php
 
-namespace Core\Providers;
+namespace Core\Console;
 
 
-use Core\Console\Kernel;
-use Symfony\Component\Console\Application;
+use Core\Providers\ServiceProvider;
 
 class ConsoleServiceProvider extends ServiceProvider
 {

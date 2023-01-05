@@ -1,11 +1,11 @@
 <?php
 
 use Core\Application;
-use Core\Http\Response;
 use Core\Http\Router;
 use Core\Support\Config;
 use Core\Support\Env;
-use Core\Support\View;
+use Core\Facades\Response;
+use Core\Facades\View;
 use Core\Support\Vite;
 
 /**
@@ -45,15 +45,12 @@ function env(string $key, mixed $default = null): mixed
 }
 
 /**
- * Returns a response, which contains the rendered view as a string
- * with the specified status code. The name of the view has to
- * consists of 2 parts seperated by a colon (f.e: "app:home")
+ * Returns a response, which contains the rendered view as a string.
  */
-function view(string $name, int $status = 200): Response
+function view(string $name, array $data = []): \Core\Http\Response
 {
-	return new Response(
-		View::make($name),
-		$status
+	return Response::setContent(
+		View::make($name)->render($data)
 	);
 }
 
@@ -61,12 +58,10 @@ function view(string $name, int $status = 200): Response
  * Returns a json encoded response with the
  * specified data and status.
  */
-function json(mixed $data, int $status = 200): Response
+function json(mixed $data, int $status = 200): \Core\Http\Response
 {
-	return new Response(
-		json_encode($data),
-		$status
-	);
+	return Response::setStatusCode($status)
+		->setContent(json_encode($data));
 }
 
 /**
@@ -80,7 +75,7 @@ function abort(int $status, $message = null)
 		echo json_encode(['message' => $message]);
 	}
 
-	die();
+	exit(0);
 }
 
 /**
@@ -97,34 +92,6 @@ function sanitizeUriPath(string $path): string
 	return rtrim($path, '/');
 }
 
-/**
- * Generates asset tags for scripts, styles and images handled
- * by vite. This utility helper works both in production and
- * in development on vite's dev server.
- */
-function vite(string $entry): string
-{
-	return app(Vite::class)->asset($entry);
-}
-
-function array_select(array $source, int $dimension, $value)
-{
-	// TODO: before starting recursion, make sure that $dimension >=1
-	// and the actual depth of $source is > $dimension
-
-	if ($dimension === 1) {
-		// return the value at that depth, empty if not set
-		return $source[$value] ?? [];
-	} else {
-
-		foreach ($source as $index => $subset) {
-			$source[$index] = array_select($subset, $dimension - 1, $value);
-		}
-
-		return $source;
-	}
-}
-
 function route(string $name): string
 {
 	$route = app(Router::class)->getRoute($name);
@@ -135,19 +102,23 @@ function route(string $name): string
  * Converts a file path from project root to an absolute one on the system.
  * By default, this function generates all directories, which are missing.
  */
-function path(string $path, bool $generateDirs = false): string
+function path(string ...$path): string
 {
-	if (php_sapi_name() !== 'cli') {
-		if (!str_starts_with($path, "../")) $path = "../" . $path;
+	if (is_array($path)) {
+		// remove any leading/trailing slashes
+		array_map(fn($p) => ltrim(rtrim($p, '/'), '/'), $path);
+		// merge paths into a single string
+		$path = implode('/', $path);
 	}
 
-	if (str_starts_with($path, '/')) $path = ltrim($path, '/');
-	$path = str_replace('/', DIRECTORY_SEPARATOR, $path);
-	$dirName = pathinfo($path, PATHINFO_DIRNAME);
-
-	if ($generateDirs && !file_exists($dirName)) {
-		mkdir($dirName, 0777, true);
+	// goto upper root directory if called within http request execution
+	if (php_sapi_name() !== 'cli' && !str_starts_with($path, "../")) {
+		$path = "../" . $path;
 	}
 
-	return $path;
+	// trim any leading slash
+	$path = ltrim($path, '/');
+
+	// replace all slashes with specified directory separator
+	return str_replace('/', DIRECTORY_SEPARATOR, $path);
 }

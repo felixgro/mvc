@@ -25,14 +25,15 @@ return [
 	 */
 	'providers' => [
 		# Core Service Providers (Don't touch those if you don't know what you're doing)
-		'Core\Providers\EnvServiceProvider',
-		'Core\Providers\EventServiceProvider',
-		'Core\Providers\DatabaseServiceProvider',
-		'Core\Providers\HttpServiceProvider',
-		'Core\Providers\ConsoleServiceProvider',
-		'Core\Providers\ViteServiceProvider',
+		\Core\Providers\EnvServiceProvider::class,
+		\Core\Providers\EventServiceProvider::class,
+		\Core\Database\DatabaseServiceProvider::class,
+		\Core\Console\ConsoleServiceProvider::class,
+		\Core\Http\HttpServiceProvider::class,
+		\Core\View\ViewServiceProvider::class,
+		\Core\Providers\ViteServiceProvider::class,
 
 		# Custom application Service Providers (add as many as you like)
-		'App\Providers\AppServiceProvider',
+		\App\Providers\AppServiceProvider::class,
 	]
 ];

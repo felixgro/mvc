@@ -11,7 +11,7 @@ return [
 	 * Port on which the vite dev server listens for requests.
 	 * This has to be the same port as defined in vite.config.js
 	 */
-	'port' => '5134',
+	'port' => 5134,
 
 	/**
 	 * Path to build manifest file.

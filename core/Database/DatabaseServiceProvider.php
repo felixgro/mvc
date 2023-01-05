@@ -1,12 +1,11 @@
 <?php
 
-namespace Core\Providers;
+namespace Core\Database;
 
 
 use Core\Database\Connections\ConnectionInterface;
 use Core\Database\Connections\MysqlConnection;
-use Core\Database\Database;
-use Core\Database\Migration;
+use Core\Providers\ServiceProvider;
 
 class DatabaseServiceProvider extends ServiceProvider
 {

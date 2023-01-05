@@ -1,5 +1,3 @@
-<?php /** @var string $slot */ ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MVC</title>
 
-	<?= vite('main.js') ?>
+	<?= $this->vite('main.js') ?>
 </head>
 <body>
-<?= $slot ?>
+<?= $this->section('content') ?>
 </body>
 </html>

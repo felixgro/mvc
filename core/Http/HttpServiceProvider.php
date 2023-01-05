@@ -1,10 +1,8 @@
 <?php
 
-namespace Core\Providers;
+namespace Core\Http;
 
-use Core\Http\ControllerResolver;
-use Core\Http\Request;
-use Core\Http\Router;
+use Core\Providers\ServiceProvider;
 use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
 
 

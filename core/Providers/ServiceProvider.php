@@ -32,7 +32,8 @@ abstract class ServiceProvider
 	 * {
 	 * //
 	 * }
-	 * */
+	 */
+
 
 	/**
 	 * This Method gets executed after the application has been instantiated.

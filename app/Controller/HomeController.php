@@ -11,7 +11,7 @@ class HomeController extends Controller
 {
 	public function index(Request $request): Response
 	{
-		return view('app:home');
+		return view('home');
 	}
 
 	public function about(): Response

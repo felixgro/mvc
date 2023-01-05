@@ -33,7 +33,9 @@ class Config
 	 */
 	public function get(string $id, mixed $default = null): mixed
 	{
-		[$configKey, $valueKey] = explode('.', $id);
+		$configRequest = explode('.', $id);
+		[$configKey, $valueKey] = [$configRequest[0], array_key_exists(1, $configRequest) ? $configRequest[1] : null];
+
 		$configData = $this->getConfigData($configKey);
 
 		if (isset($valueKey) && !array_key_exists($valueKey, $configData)) {

@@ -44,6 +44,7 @@ class Application
 	public static function getInstance(): Application
 	{
 		if (!isset(static::$instance)) {
+			// Generate application using all specified providers.
 			static::$instance = new Application();
 			static::$instance->loadProviders();
 			static::$instance->registerProviders();
