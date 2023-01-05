@@ -2,10 +2,10 @@
 import 'vite/modulepreload-polyfill'
 
 // Styles
-import './styles'
+import './styles/app.css'
 
 // Vue
-import { createApp } from 'vue'
+import {createApp} from 'vue'
 
 // If you are build a SPA with a single <div id="app"></div> entry you would:
 // import App from './App.vue'
@@ -17,10 +17,10 @@ import { createApp } from 'vue'
 // First let's load all components that should be available to in-browser template compilation
 
 // Example of how to import **all** components
-const modules = import.meta.glob('./components/*.vue', { eager: true })
+const modules = import.meta.glob('./components/*.vue', {eager: true})
 const components = {}
 for (const path in modules) {
-   components[modules[path].default.__name] = modules[path].default
+    components[modules[path].default.__name] = modules[path].default
 }
 
 // if importing all is too much you can always do it manually
@@ -33,8 +33,8 @@ for (const path in modules) {
 // Note our lookup is a wrapping div with .vue-app class
 
 for (const el of document.getElementsByClassName('vue-app')) {
-   createApp({
-      template: el.innerHTML,
-      components
-   }).mount(el)
+    createApp({
+        template: el.innerHTML,
+        components
+    }).mount(el)
 }

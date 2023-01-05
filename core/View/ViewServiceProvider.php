@@ -23,8 +23,8 @@ class ViewServiceProvider extends ServiceProvider
 		$view->addFolder('layouts', path($this->config['directory'], 'layouts'));
 
 		if (config('view.framework') === 'vue') {
-			$view->registerFunction('vue', function () {
-				return '<div class="vue-app">';
+			$view->registerFunction('vue', function ($class = '') {
+				return "<div class='vue-app $class'>";
 			});
 
 			$view->registerFunction('endvue', function () {

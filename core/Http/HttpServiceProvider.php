@@ -14,6 +14,7 @@ class HttpServiceProvider extends ServiceProvider
 	{
 		$this->bindKernelContract();
 		$this->bindRequest();
+		$this->bindResponse();
 		$this->bindRouter();
 	}
 
@@ -34,6 +35,11 @@ class HttpServiceProvider extends ServiceProvider
 		$this->app->singleton(Request::class, function () {
 			return Request::createFromGlobals();
 		});
+	}
+
+	private function bindResponse(): void
+	{
+		$this->app->singleton(Response::class);
 	}
 
 	private function bindRouter(): void
