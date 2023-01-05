@@ -46,6 +46,12 @@ class Router
 	private Container $container;
 
 	/**
+	 * Stores current route action tuple in following style:
+	 * [Route $route, callable $action]
+	 */
+	private array $currentRouteAction = [];
+
+	/**
 	 * Caching alias paths if used more than once.
 	 */
 	private array $aliasCache = [];
@@ -68,27 +74,15 @@ class Router
 	 */
 	public function getAction(Request $request): callable|false
 	{
-		$path = $request->getSanitizedPath();
-		$mappings = $this->getActionMappings($request);
-
-		if (array_key_exists($path, $mappings)) {
-			[$route, $action] = $mappings[$path];
-
-			return function () use ($route, $action) {
-				$this->executeGlobalMiddleware();
-				$this->executeRouteMiddleware($route);
-				return $this->container->executeMethod($action);
-			};
+		if (!$this->getCurrentRouteAction()) {
+			return false;
 		}
 
-		// TODO: Refactor asset path to use global middleware through service provider
-		if (str_starts_with($path, '/assets')) {
-			return function () {
-				$this->executeGlobalMiddleware();
-			};
-		}
+		[$route, $action] = $this->getCurrentRouteAction();
 
-		return false;
+		return function () use ($action) {
+			return $this->container->executeMethod($action);
+		};
 	}
 
 	/**
@@ -153,17 +147,46 @@ class Router
 		}
 	}
 
+	public function executeAllMiddleware(): void
+	{
+		$this->executeGlobalMiddleware();
+		$this->executeRouteMiddleware($this->getRoute());
+	}
+
 	/**
 	 * Retrieve route by alias name.
 	 */
-	public function getRoute(string $alias): Route
+	public function getRoute(string $alias = ''): Route
 	{
+		if (empty($alias)) {
+			[$route] = $this->getCurrentRouteAction();
+			return $route;
+		}
+
 		if (!array_key_exists($alias, $this->aliasCache)) {
 			throw new Exception("Could not find route with name '$alias'");
 		}
 
 		return $this->aliasCache[$alias];
 	}
+
+	/**
+	 * Get tuple of current route action in form: [$route, $action]
+	 */
+	private function getCurrentRouteAction(): array|false
+	{
+		if (!empty($this->currentRouteAction)) {
+			return $this->currentRouteAction;
+		}
+
+		$request = $this->container->resolve(Request::class);
+
+		$path = $request->getSanitizedPath();
+		$mappings = $this->getActionMappings($request);
+
+		return array_key_exists($path, $mappings) ? $mappings[$path] : false;
+	}
+
 
 	/**
 	 * Executes all custom route middlewares.
