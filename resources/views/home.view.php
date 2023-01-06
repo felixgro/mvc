@@ -5,7 +5,7 @@
 </p>
 
 <?= $this->vue() ?>
-<hello-world msg="<?= $this->e('Hello World!') ?>"></hello-world>
+<login-form is-authenticated="<?= $this->auth()->check() ?>"></login-form>
 <?= $this->endvue() ?>
 
 <p class="message">

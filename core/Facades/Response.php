@@ -5,6 +5,7 @@ namespace Core\Facades;
 use Core\Http\Response as BaseResponse;
 
 /**
+ * @method static BaseResponse redirect(string $to)
  * @method static BaseResponse setContent(string $content)
  * @method static BaseResponse setStatusCode(int $status)
  *

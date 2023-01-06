@@ -28,6 +28,7 @@ return [
 		\Core\Providers\EnvServiceProvider::class,
 		\Core\Providers\EventServiceProvider::class,
 		\Core\Database\DatabaseServiceProvider::class,
+		\Core\Auth\AuthServiceProvider::class,
 		\Core\Console\ConsoleServiceProvider::class,
 		\Core\Http\HttpServiceProvider::class,
 		\Core\View\ViewServiceProvider::class,

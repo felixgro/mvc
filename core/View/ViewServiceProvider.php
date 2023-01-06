@@ -2,6 +2,7 @@
 
 namespace Core\View;
 
+use Core\Auth\Auth;
 use Core\Providers\ServiceProvider;
 
 class ViewServiceProvider extends ServiceProvider
@@ -21,6 +22,10 @@ class ViewServiceProvider extends ServiceProvider
 	public function boot(View $view)
 	{
 		$view->addFolder('layouts', path($this->config['directory'], 'layouts'));
+
+		$view->registerFunction('auth', function () {
+			return app(Auth::class);
+		});
 
 		if (config('view.framework') === 'vue') {
 			$view->registerFunction('vue', function ($class = '') {

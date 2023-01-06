@@ -7,6 +7,9 @@ import './styles/app.css'
 // Vue
 import {createApp} from 'vue'
 
+// Application
+import './scripts/app';
+
 // If you are build a SPA with a single <div id="app"></div> entry you would:
 // import App from './App.vue'
 // createApp(App).mount('#app')

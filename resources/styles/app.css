@@ -26,3 +26,7 @@ button {
 	font-size: 14px;
 	background-color: #eee;
 }
+
+.login-form {
+	height: 250px;
+}

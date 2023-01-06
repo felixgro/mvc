@@ -2,29 +2,37 @@
 
 namespace App\Controller;
 
+use Core\Facades\Auth;
 use Core\Http\Controller;
-use Core\Http\Request;
-use Core\Http\Response;
+use Core\Facades\Response;
 
 
 class HomeController extends Controller
 {
-	public function index(Request $request): Response
+	public function index()
 	{
 		return view('home');
 	}
 
-	public function about(): Response
+	public function logout()
 	{
+		Auth::logout();
+		return Response::redirect('http://mvc.test/');
+	}
+
+	public function about()
+	{
+		dd(Auth::login('me@felixgrohs.com', 'secret'));
+
 		return json('Hello About!');
 	}
 
-	public function auth(): Response
+	public function auth()
 	{
 		return json('Hello user!');
 	}
 
-	public function test(): Response
+	public function test()
 	{
 		return json('Hi');
 	}

@@ -50,11 +50,14 @@ class Container
 
 	/**
 	 * Registers a new factory for a singleton instance in the container.
+	 * If no factory set, the container tries to instantiate the given abstract.
 	 */
 	public function singleton(string $abstract, callable $factory = null): self
 	{
 		if (is_null($factory)) {
-			$factory = fn() => new $abstract();
+			$factory = function () use ($abstract) {
+				return $this->createNewInstance($abstract);
+			};
 		}
 
 		$this->singletons[$abstract] = null;
