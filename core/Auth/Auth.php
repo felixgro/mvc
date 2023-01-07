@@ -2,9 +2,8 @@
 
 namespace Core\Auth;
 
-use Core\Auth\Authenticators\AuthenticatorInterface;
-use Core\Auth\UserFactories\UserFactoryInterface;
-use Somnambulist\Components\Validation\Factory;
+use Core\Auth\Contracts\AuthenticatorInterface;
+use Core\Auth\Contracts\UserFactoryInterface;
 
 class Auth
 {

@@ -39,11 +39,16 @@ class Container
 
 	/**
 	 * Registers a new factory in the container. This factory callback
-	 * gets executed when the correlating abstract is resolved. By default,
-	 * the execution result gets cached for future references.
+	 * gets executed when the correlating abstract is resolved.
 	 */
-	public function bind(string $abstract, callable $factory, bool $singleton = true): self
+	public function bind(string $abstract, callable|string $factory): self
 	{
+		if (is_string($factory)) {
+			$factory = function () use ($factory) {
+				return $this->resolve($factory);
+			};
+		}
+
 		$this->bindings[$abstract] = $factory;
 		return $this;
 	}
@@ -52,11 +57,15 @@ class Container
 	 * Registers a new factory for a singleton instance in the container.
 	 * If no factory set, the container tries to instantiate the given abstract.
 	 */
-	public function singleton(string $abstract, callable $factory = null): self
+	public function singleton(string $abstract, callable|string $factory = null): self
 	{
 		if (is_null($factory)) {
 			$factory = function () use ($abstract) {
 				return $this->createNewInstance($abstract);
+			};
+		} else if (is_string($factory)) {
+			$factory = function () use ($factory) {
+				return $this->resolve($factory);
 			};
 		}
 

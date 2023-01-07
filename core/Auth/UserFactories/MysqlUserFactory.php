@@ -2,6 +2,7 @@
 
 namespace Core\Auth\UserFactories;
 
+use Core\Auth\Contracts\UserFactoryInterface;
 use Core\Database\Database;
 
 class MysqlUserFactory implements UserFactoryInterface
@@ -39,7 +40,7 @@ class MysqlUserFactory implements UserFactoryInterface
 				'id' => $value
 			]);
 		}
-		
+
 		if (!empty($userQuery) && $user = $userQuery[0]) {
 			return $user;
 		}

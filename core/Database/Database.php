@@ -72,12 +72,12 @@ class Database
 	/**
 	 * Proxies a query to the current connection.
 	 */
-	public function query(string $query, array $arguments = []): mixed
+	public function query(string $query, array $arguments = [], array $options = []): mixed
 	{
 		$connection = $this->getCurrentConnection();
 
 		try {
-			return $connection->query($query, $arguments);
+			return $connection->query($query, $arguments, $options);
 		} catch (\Throwable $error) {
 			$connectionKey = $this->getConnectionKey();
 			throw new Exception("Could not perform query using connection $connectionKey", 0, $error);

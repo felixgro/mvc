@@ -1,6 +1,6 @@
 <?php
 
-namespace Core\Auth\Authenticators;
+namespace Core\Auth\Contracts;
 
 interface AuthenticatorInterface
 {

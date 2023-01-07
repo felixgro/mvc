@@ -65,7 +65,7 @@ class Application
 	/**
 	 * Binds a class in the application container.
 	 */
-	public function bind(string $abstract, callable $factory): void
+	public function bind(string $abstract, callable|string $factory): void
 	{
 		$this->container->bind($abstract, $factory);
 	}
@@ -73,7 +73,7 @@ class Application
 	/**
 	 * Binds a singleton in the application container.
 	 */
-	public function singleton(string $abstact, callable $factory = null): void
+	public function singleton(string $abstact, callable|string $factory = null): void
 	{
 		$this->container->singleton($abstact, $factory);
 	}

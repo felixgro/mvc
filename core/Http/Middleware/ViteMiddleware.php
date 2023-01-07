@@ -2,7 +2,7 @@
 
 namespace Core\Http\Middleware;
 
-use Core\Contracts\Middleware;
+use Core\Http\Contracts\Middleware;
 use Core\Http\Request;
 use Core\Support\Vite;
 

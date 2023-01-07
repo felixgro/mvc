@@ -4,7 +4,7 @@ namespace Core\Database;
 
 class Migration
 {
-	private array $migrationFiles = [];
+	public array $migrationFiles = [];
 	private Database $db;
 
 	public function __construct(string $migrationDir, Database $db)
@@ -18,17 +18,21 @@ class Migration
 		$this->migrationFiles = glob($dir . '/*');
 	}
 
-	public function migrate()
+	public function migrate(): int
 	{
 		foreach ($this->migrationFiles as $file) {
-			$this->executeSQLFile($file);
+			if ($this->executeSQLFile($file) === 0) {
+				return 0;
+			};
 		}
+
+		return 1;
 	}
 
-	private function executeSQLFile($file)
+	public function executeSQLFile($file): int
 	{
 		if (!file_exists($file)) {
-			throw new \Exception("Cannot find migration file $file");
+			return 0;
 		}
 
 		$queries = explode(';', file_get_contents($file));
@@ -37,6 +41,8 @@ class Migration
 		foreach ($queries as $query) {
 			$this->executeQuery($query);
 		}
+
+		return 1;
 	}
 
 	private function executeQuery(string $query)

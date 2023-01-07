@@ -3,12 +3,14 @@
 return [
 	'default' => 'mysql',
 
+	'timestamps' => 'Y-m-d H:i:s',
+
 	'connections' => [
 		'sqlite' => [
 			'url' => env('DATABASE_URL'),
 			'database' => env('DB_DATABASE', ''),
 			'prefix' => env('DB_PREFIX', ''),
-			'handler' => 'Core\Database\Connections\SqliteConnection',
+			'handler' => Core\Database\Connections\SqliteConnection::class,
 		],
 
 		'mysql' => [
@@ -23,7 +25,7 @@ return [
 			'charset' => 'utf8mb4',
 			'collation' => 'utf8mb4_unicode_ci',
 			'engine' => 'INNO_DB',
-			'handler' => 'Core\Database\Connections\MysqlConnection'
+			'handler' => Core\Database\Connections\MysqlConnection::class
 		]
 	]
 ];

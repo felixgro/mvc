@@ -1,6 +1,6 @@
 <?php
 
-namespace Core\Auth\UserFactories;
+namespace Core\Auth\Contracts;
 
 interface UserFactoryInterface
 {

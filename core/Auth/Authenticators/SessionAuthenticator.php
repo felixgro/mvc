@@ -2,7 +2,8 @@
 
 namespace Core\Auth\Authenticators;
 
-use Core\Auth\UserFactories\UserFactoryInterface;
+use Core\Auth\Contracts\AuthenticatorInterface;
+use Core\Auth\Contracts\UserFactoryInterface;
 
 class SessionAuthenticator implements AuthenticatorInterface
 {
@@ -24,6 +25,8 @@ class SessionAuthenticator implements AuthenticatorInterface
 	public function login(string $id, string $password, bool $remember = false): bool
 	{
 		$user = $this->userFactory->getUserBy('email', $id);
+
+		dd($remember);
 
 		if ($user && $this->userFactory->verifyPassword($user, $password)) {
 			$_SESSION['user_id'] = $user->id;

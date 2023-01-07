@@ -35,10 +35,21 @@ class MysqlConnection implements ConnectionInterface
 	/**
 	 * Perform any mysql query using the active pdo instance.
 	 */
-	public function query(string $query, array $arguments): array|bool
+	public function query(string $query, array $arguments, array $options = []): mixed
 	{
 		$statement = $this->pdo->prepare($query);
 		$statement->execute($arguments);
-		return $statement->fetchAll();
+
+		if (array_key_exists('fetchClass', $options)) {
+			$statement->setFetchMode(PDO::FETCH_CLASS, $options['fetchClass']);
+		}
+
+		$res = $statement->fetchAll();
+
+		if (str_starts_with(strtoupper($query), 'INSERT')) {
+			return intval($this->pdo->lastInsertId());
+		}
+
+		return $res;
 	}
 }

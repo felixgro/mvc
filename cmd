@@ -4,7 +4,7 @@
 require_once __DIR__ . "/vendor/autoload.php";
 
 if (!config('console.enable'))
-	exit(0);
+	exit(1);
 
 app(\Core\Console\Kernel::class)
 	->handleExecution();
